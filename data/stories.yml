@@ -1,0 +1,8 @@
+version: "2.0"
+
+stories:
+
+- story: conversatoion start
+  steps:
+  - intent: connected
+  - action: utter_greet

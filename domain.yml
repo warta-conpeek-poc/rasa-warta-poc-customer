@@ -1,0 +1,25 @@
+version: "2.0"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: false
+
+intents:
+- assistance_request
+- claim_report
+- claim_status
+- agent_insurance_info
+- customer_insurance_info
+
+responses:
+  utter_greet:
+  - channel: conpeek-text
+    custom:
+      blocks:
+      - text: "Witaj! W czym mogę pomóc?"
+        typing_delay: 500
+  - channel: conpeek-voice
+    custom:
+      blocks:
+        - text: "Witaj! W czym mogę pomóc?"
+  - text: "Witaj! W czym mogę pomóc?"

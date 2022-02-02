@@ -1,0 +1,47 @@
+version: "2.0"
+
+nlu:
+
+  - intent: connected
+    examples: |
+      - __PEER_CONNECTED__
+
+  - intent: disconnected
+    examples: |
+      - __PEER_DISCONNECTED__
+
+  - intent: assistance_request
+    examples: |
+      - potrzebuję holowania
+      - miałem kolizję, jestem na miejscu zdarzenia
+      - wybito szybę potrzebuję szklarza
+      - auto nie zapala
+      - w samochodzie zapaliła się kontrolka, potrzebuję pomocy
+      - mam uszkodzone koło w aucie
+
+  - intent: claim_report
+    examples: |
+      - chciałbym zgłosić szkodę
+      - sąsiad zalał mi mieszkanie
+      - pralka przestała działać
+      - miałem wypadek, chciałem to zgłosić
+      - sprawca kolizji ma ubezpieczenie w Warcie
+
+  - intent: claim_status_bot
+    examples: |
+      - kiedy będą oględziny
+      - czy przyjedzie rzeczoznawca
+      - wysłałem dokumenty czy one już dotarły
+
+  - intent: claim_status_consultant
+    examples: |
+      - dzwonie w sprawie pojazdu zastępczego
+
+  - intent: agent_insurance_info
+    examples: |
+      -
+
+  - intent: customer_insurance_info
+    examples: |
+      -
+
