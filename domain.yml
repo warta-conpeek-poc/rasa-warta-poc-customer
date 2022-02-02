@@ -12,6 +12,7 @@ intents:
 - customer_insurance_info
 
 responses:
+  # -----------------------------------------------------------------------------
   utter_greet:
   - channel: conpeek-text
     custom:
