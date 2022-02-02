@@ -6,3 +6,10 @@ stories:
   steps:
   - intent: connected
   - action: utter_greet
+  - checkpoint: check_conversation_started
+
+- story: assistance
+  steps:
+  - checkpoint: check_conversation_started
+  - intent: assistance_request
+  - action: utter_assistance_transfer
