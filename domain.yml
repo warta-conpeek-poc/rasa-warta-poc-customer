@@ -17,12 +17,8 @@ responses:
   - channel: conpeek-voice
     custom:
       blocks:
-        - text: "Witaj w dziale obsługi WARTA S.A.! W czym mogę pomóc?"
-      end_of_conversation:
-        export:
-          next_action: "call"
-          call_number: "assistance"
-  - text: "Witaj w dziale obsługi WARTA S.A.! W czym mogę pomóc?"
+        - text: "W czym mogę pomóc?"
+  - text: "W czym mogę pomóc?"
 
   utter_assistance_transfer:
   - channel: conpeek-voice
