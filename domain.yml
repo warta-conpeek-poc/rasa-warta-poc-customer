@@ -24,11 +24,11 @@ entities:
   - insurance_type
   - vehicle_registration_number
 
-slots:
+#slots:
 
-actions:
+#actions:
 
-forms:
+#forms:
 
 responses:
   # UTTER -----------------------------------------------------------------------------
