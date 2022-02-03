@@ -7,6 +7,7 @@ session_config:
 intents:
 - connected
 - disconnected
+- goodbye
 - affirm
 - deny
 - assistance_request
@@ -33,7 +34,7 @@ slots:
     influence_conversation: false
 
 actions:
-- restarted
+- action_restarted
 
 forms:
   claim_report_form:
