@@ -30,3 +30,7 @@ stories:
   - intent: deny
   - action: claim_report_form
   - active_loop: claim_report_form
+  - active_loop: null
+  - action: utter_describe_incident
+  - intent: claim_report
+  - action: utter_ok

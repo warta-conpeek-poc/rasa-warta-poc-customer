@@ -119,3 +119,11 @@ responses:
       - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
   - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
 
+  # UTTER -----------------------------------------------------------------------------
+  utter_ok:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "OK"
+  - text: "OK"
+

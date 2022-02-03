@@ -58,11 +58,12 @@ nlu:
   examples: |
     - dzwonie w sprawie pojazdu zastępczego
 
-- intent: agent_insurance_info
-  examples: |
-    -
+#- intent: agent_insurance_info
+#  examples: |
+#    -
+#
+#- intent: customer_insurance_info
+#  examples: |
+#    -
 
-- intent: customer_insurance_info
-  examples: |
-    -
 
