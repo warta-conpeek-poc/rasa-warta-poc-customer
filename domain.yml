@@ -26,10 +26,13 @@ entities:
 - vehicle_registration_number
 
 slots:
-  phone_number:
+  customer_phone_number:
     type: any
     influence_conversation: false
-  full_name:
+  customer_full_name:
+    type: any
+    influence_conversation: false
+  claim_report_form_confirm:
     type: any
     influence_conversation: false
 
@@ -39,9 +42,11 @@ actions:
 forms:
   claim_report_form:
     required_slots:
-      full_name:
+      customer_full_name:
       - type: from_text
-      phone_number:
+      customer_phone_number:
+      - type: from_text
+      claim_report_form_confirm:
       - type: from_text
 
 responses:
@@ -81,3 +86,28 @@ responses:
       blocks:
       - text: "Czy potrzebujesz Assistans?"
   - text: "Czy potrzebujesz Assistans?"
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_gas_meter_form_gas_meter_form_confirm:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?
+  - text: Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_gas_meter_form_customer_full_name:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swoje imię i nazwisko."
+  - text: "Podaj proszę swoje imię i nazwisko."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_gas_meter_form_customer_phone_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
+  - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
+
