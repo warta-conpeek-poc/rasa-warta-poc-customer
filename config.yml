@@ -18,12 +18,12 @@ pipeline:
 - name: ResponseSelector
   epochs: 500
   constrain_similarities: true
-- name: "DucklingEntityExtractor"
-  url: "http://localhost:8000"
-  dimensions: ["time"]
-  locale: "pl_PL"
-  timezone: "Europe/Warsaw"
-  timeout : 3
+#- name: "DucklingEntityExtractor"
+#  url: "http://localhost:8000"
+#  dimensions: ["time"]
+#  locale: "pl_PL"
+#  timezone: "Europe/Warsaw"
+#  timeout : 3
 - name: FallbackClassifier
   threshold: 0.6
   ambiguity_threshold: 0.1
