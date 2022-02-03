@@ -28,4 +28,5 @@ stories:
   - intent: claim_report
   - action: utter_ask_for_assistance
   - intent: deny
-  - action: utter_assistance_transfer
+  - action: claim_report_form
+  - active_loop: claim_report_form

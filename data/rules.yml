@@ -8,12 +8,12 @@ rules:
   - action: utter_goodbye
   - action: action_restarted
 
-- rule: Activate gas meter form
-  steps:
-    - intent: gas_meter
-    - action: gas_meter_form
-    - active_loop: gas_meter_form
-
+#- rule: Activate claim report form
+#  steps:
+#    - intent: gas_meter
+#    - action: gas_meter_form
+#    - active_loop: gas_meter_form
+#
 - rule: Submit claim report form
   condition:
   - active_loop: claim_report_form
