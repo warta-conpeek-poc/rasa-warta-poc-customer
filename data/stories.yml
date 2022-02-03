@@ -8,8 +8,24 @@ stories:
   - action: utter_greet
   - checkpoint: check_conversation_started
 
-- story: assistance
+- story: assistance request
   steps:
   - checkpoint: check_conversation_started
   - intent: assistance_request
+  - action: utter_assistance_transfer
+
+- story: claim report with assistance
+  steps:
+  - checkpoint: check_conversation_started
+  - intent: claim_report
+  - action: utter_ask_for_assistance
+  - intent: affirm
+  - action: utter_assistance_transfer
+
+- story: claim report without assistance
+  steps:
+  - checkpoint: check_conversation_started
+  - intent: claim_report
+  - action: utter_ask_for_assistance
+  - intent: deny
   - action: utter_assistance_transfer

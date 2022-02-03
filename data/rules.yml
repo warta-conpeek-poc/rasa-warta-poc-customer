@@ -1,0 +1,25 @@
+version: "2.0"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+  - action: action_restarted
+
+- rule: Activate gas meter form
+  steps:
+    - intent: gas_meter
+    - action: gas_meter_form
+    - active_loop: gas_meter_form
+
+- rule: Submit gas meter form
+  condition:
+  - active_loop: gas_meter_form
+  steps:
+  - action: gas_meter_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_submit

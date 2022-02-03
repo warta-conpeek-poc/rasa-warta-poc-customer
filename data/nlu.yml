@@ -2,46 +2,67 @@ version: "2.0"
 
 nlu:
 
-  - intent: connected
-    examples: |
-      - __PEER_CONNECTED__
+- intent: connected
+  examples: |
+    - __PEER_CONNECTED__
 
-  - intent: disconnected
-    examples: |
-      - __PEER_DISCONNECTED__
+- intent: disconnected
+  examples: |
+    - __PEER_DISCONNECTED__
 
-  - intent: assistance_request
-    examples: |
-      - potrzebuję holowania
-      - miałem kolizję, jestem na miejscu zdarzenia
-      - wybito szybę potrzebuję szklarza
-      - auto nie zapala
-      - w samochodzie zapaliła się kontrolka, potrzebuję pomocy
-      - mam uszkodzone koło w aucie
+- intent: affirm
+  examples: |
+    - tak
+    - potwierdzam
+    - oczywiście
+    - jasne
+    - tak jest
+    - poproszę
+    - zgoda
+    - zgadzam się
 
-  - intent: claim_report
-    examples: |
-      - chciałbym zgłosić szkodę
-      - sąsiad zalał mi mieszkanie
-      - pralka przestała działać
-      - miałem wypadek, chciałem to zgłosić
-      - sprawca kolizji ma ubezpieczenie w Warcie
+- intent: deny
+  examples: |
+    - nie
+    - nigdy
+    - nie ma mowy
+    - nie zgadzam się
+    - w życiu
+    - w żadnym wypadku
 
-  - intent: claim_status_bot
-    examples: |
-      - kiedy będą oględziny
-      - czy przyjedzie rzeczoznawca
-      - wysłałem dokumenty czy one już dotarły
+- intent: assistance_request
+  examples: |
+    - potrzebuję holowania
+    - potrzebuję transportu
+    - miałem kolizję, jestem na miejscu zdarzenia
+    - wybito szybę potrzebuję szklarza
+    - auto nie zapala
+    - w samochodzie zapaliła się kontrolka, potrzebuję pomocy
+    - mam uszkodzone koło w aucie
 
-  - intent: claim_status_consultant
-    examples: |
-      - dzwonie w sprawie pojazdu zastępczego
+- intent: claim_report
+  examples: |
+    - chciałbym zgłosić szkodę
+    - sąsiad zalał mi mieszkanie
+    - pralka przestała działać
+    - miałem wypadek, chciałem to zgłosić
+    - sprawca kolizji ma ubezpieczenie w Warcie
 
-  - intent: agent_insurance_info
-    examples: |
-      -
+- intent: claim_status_bot
+  examples: |
+    - kiedy będą oględziny
+    - czy przyjedzie rzeczoznawca
+    - wysłałem dokumenty czy one już dotarły
 
-  - intent: customer_insurance_info
-    examples: |
-      -
+- intent: claim_status_consultant
+  examples: |
+    - dzwonie w sprawie pojazdu zastępczego
+
+- intent: agent_insurance_info
+  examples: |
+    -
+
+- intent: customer_insurance_info
+  examples: |
+    -
 
