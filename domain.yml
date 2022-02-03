@@ -88,15 +88,15 @@ responses:
   - text: "Czy potrzebujesz Assistans?"
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_gas_meter_form_gas_meter_form_confirm:
+  utter_ask_claim_report_form_gas_meter_form_confirm:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?
-  - text: Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?
+      - text: "Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?"
+  - text: "Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?"
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_gas_meter_form_customer_full_name:
+  utter_ask_claim_report_form_customer_full_name:
   - channel: conpeek-voice
     custom:
       blocks:
@@ -104,10 +104,18 @@ responses:
   - text: "Podaj proszę swoje imię i nazwisko."
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_gas_meter_form_customer_phone_number:
+  utter_ask_claim_report_form_customer_phone_number:
   - channel: conpeek-voice
     custom:
       blocks:
       - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
   - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_describe_incident:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
+  - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
 
