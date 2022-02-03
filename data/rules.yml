@@ -14,12 +14,12 @@ rules:
     - action: gas_meter_form
     - active_loop: gas_meter_form
 
-- rule: Submit gas meter form
+- rule: Submit claim report form
   condition:
-  - active_loop: gas_meter_form
+  - active_loop: claim_report_form
   steps:
-  - action: gas_meter_form
+  - action: claim_report_form
   - active_loop: null
   - slot_was_set:
     - requested_slot: null
-  - action: utter_submit
+  - action: utter_submit_claim_report_form

@@ -5,48 +5,65 @@ session_config:
   carry_over_slots_to_new_session: false
 
 intents:
-- connected
-- disconnected
-- affirm
-- deny
-- assistance_request
-- claim_report
-- claim_status_bot
-- claim_status_consultant
-- agent_insurance_info
-- customer_insurance_info
+  - connected
+  - disconnected
+  - affirm
+  - deny
+  - assistance_request
+  - claim_report
+  - claim_status_bot
+  - claim_status_consultant
+  - agent_insurance_info
+  - customer_insurance_info
+
+entities:
+  - phone_number
+  - full_name
+  - time
+  - insurance_number
+  - insurance_type
+  - vehicle_registration_number
+
+slots:
+
+actions:
+
+forms:
 
 responses:
-  # -----------------------------------------------------------------------------
+  # UTTER -----------------------------------------------------------------------------
   utter_greet:
-  - channel: conpeek-voice
-    custom:
-      blocks:
-        - text: "W czym mogę pomóc?"
-  - text: "W czym mogę pomóc?"
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: "W czym mogę pomóc?"
+    - text: "W czym mogę pomóc?"
 
+  # UTTER -----------------------------------------------------------------------------
   utter_goodbye:
     - channel: conpeek-voice
       custom:
         blocks:
           - text: "Do widzenia."
         end_of_conversation:
-  - text: "Do widzenia."
+    - text: "Do widzenia."
 
+  # UTTER -----------------------------------------------------------------------------
   utter_assistance_transfer:
-  - channel: conpeek-voice
-    custom:
-      blocks:
-        - text: ""
-      end_of_conversation:
-        export:
-          next_action: "call"
-          call_number: "assistance"
-  - text: ""
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: ""
+        end_of_conversation:
+          export:
+            next_action: "call"
+            call_number: "assistance"
+    - text: ""
 
+  # UTTER -----------------------------------------------------------------------------
   utter_ask_for_assistance:
-  - channel: conpeek-voice
-    custom:
-      blocks:
-        - text: "Czy potrzebujesz Assistance?"
-  - text: "Czy potrzebujesz Assistance?"
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: "Czy potrzebujesz Assistance?"
+    - text: "Czy potrzebujesz Assistance?"
