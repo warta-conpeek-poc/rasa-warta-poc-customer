@@ -88,7 +88,7 @@ responses:
   - text: "Czy potrzebujesz Assistans?"
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_gas_meter_form_confirm:
+  utter_ask_claim_report_form_claim_report_form_confirm:
   - channel: conpeek-voice
     custom:
       blocks:
@@ -108,8 +108,8 @@ responses:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
-  - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy"
+      - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy."
+  - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy."
 
   # UTTER -----------------------------------------------------------------------------
   utter_describe_incident:
