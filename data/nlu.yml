@@ -21,6 +21,13 @@ nlu:
     - zgoda
     - zgadzam się
 
+- intent: inform
+  examples: |
+    - Jan Kowalski
+    - Karol Darwin
+    - 501003003
+    - 505033753
+
 - intent: deny
   examples: |
     - nie
