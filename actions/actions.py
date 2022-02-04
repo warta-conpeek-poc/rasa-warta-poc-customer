@@ -39,6 +39,7 @@ class ActionSessionStart(Action):
 
     async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
 
+        logging.critical("Session started !!!")
         events = [SessionStarted()]
         metadata = tracker.latest_message["metadata"]
         logging.critical(metadata)
