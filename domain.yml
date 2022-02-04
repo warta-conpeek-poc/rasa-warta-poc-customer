@@ -46,6 +46,7 @@ actions:
 
 - validate_claim_report_form
 - action_restarted
+- action_low_confidence
 
 forms:
   claim_report_form:
