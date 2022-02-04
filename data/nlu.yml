@@ -5,10 +5,17 @@ nlu:
 - intent: connected
   examples: |
     - __PEER_CONNECTED__
+    - __peer_connected__
 
 - intent: disconnected
   examples: |
     - __PEER_DISCONNECTED__
+    - __peer_disconnected__
+
+- intent: asr_low_confidence
+  examples: |
+    - __LOW_CONFIDENCE__
+    - __low_confidence__
 
 - intent: affirm
   examples: |

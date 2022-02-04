@@ -8,6 +8,12 @@ rules:
   - action: utter_goodbye
   - action: action_restarted
 
+- rule: ASR low confidence
+  steps:
+  - intent: asr_low_confidence
+  - action: action_low_confidence
+
+
 #- rule: Activate claim report form
 #  steps:
 #    - intent: gas_meter
