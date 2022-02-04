@@ -48,11 +48,12 @@ class ActionSessionStart(Action):
         # events.extend(self._slot_set_events_from_tracker(tracker))
         #
         # # Grab slots from metadata
-        # message_metadata = []
-        # for e in tracker.events[::-1]:
-        #   # Does this tracker event have metadata?
-        #     if "metadata" in e and e["metadata"] != None:
-        #         message_metadata = e["metadata"]
+        message_metadata = []
+        for e in tracker.events[::-1]:
+          # Does this tracker event have metadata?
+            if "metadata" in e and e["metadata"] != None:
+                message_metadata = e["metadata"]
+                logging.critical(message_metadata)
         #         # Does this metadata have slots?
         #         if message_metadata and "slots" in message_metadata:
         #             for key, value in message_metadata["slots"].items():
