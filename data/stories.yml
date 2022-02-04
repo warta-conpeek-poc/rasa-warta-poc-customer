@@ -8,6 +8,12 @@ stories:
   - action: utter_greet
   - checkpoint: check_conversation_started
 
+- story: interview
+  steps:
+  - checkpoint: check_conversation_started
+  - intent: interview
+  - action: utter_interview
+
 - story: assistance request
   steps:
   - checkpoint: check_conversation_started

@@ -5,6 +5,7 @@ session_config:
   carry_over_slots_to_new_session: false
 
 intents:
+- interview
 - connected
 - disconnected
 - asr_low_confidence
@@ -57,6 +58,14 @@ forms:
       - type: from_text
 
 responses:
+  # UTTER -----------------------------------------------------------------------------
+  utter_interview:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Bardzo mi się podoba"
+  - text: "Bardzo mi się podoba"
+
   # UTTER -----------------------------------------------------------------------------
   utter_greet:
   - channel: conpeek-voice

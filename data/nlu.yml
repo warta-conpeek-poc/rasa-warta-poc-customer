@@ -2,6 +2,11 @@ version: "2.0"
 
 nlu:
 
+- intent: interview
+  examples: |
+    - nazywam się Jan Kowalski
+    - z tej strony Jan Kowalski
+
 - intent: connected
   examples: |
     - __PEER_CONNECTED__

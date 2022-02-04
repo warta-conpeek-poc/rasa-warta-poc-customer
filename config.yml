@@ -9,10 +9,10 @@ pipeline:
 - name: SpacyEntityExtractor
 - name: SpacyFeaturizer
   pooling: mean
-- name: WhitespaceTokenizer
-- name: RegexFeaturizer
-- name: LexicalSyntacticFeaturizer
-- name: CountVectorsFeaturizer
+#- name: WhitespaceTokenizer
+#- name: RegexFeaturizer
+#- name: LexicalSyntacticFeaturizer
+#- name: CountVectorsFeaturizer
 - name: CountVectorsFeaturizer
   analyzer: char_wb
   min_ngram: 1
