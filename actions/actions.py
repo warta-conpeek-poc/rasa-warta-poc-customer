@@ -32,33 +32,12 @@ class ActionSessionStart(Action):
 
         logging.critical("Session started !!!")
         events = [SessionStarted()]
-        metadata = tracker.latest_message["metadata"]
-        logging.critical(metadata)
-
-        # # any slots that should be carried over should come after the
-        # # `session_started` event`
-        # events.extend(self._slot_set_events_from_tracker(tracker))
-        #
-        # # Grab slots from metadata
         metadata = tracker.get_slot("session_started_metadata")
         logging.critical(metadata)
-        # for e in tracker.events[::-1]:
-        #   # Does this tracker event have metadata?
-        #     if "metadata" in e and e["metadata"] != None:
-        #         message_metadata = e["metadata"]
-        #         logging.critical(message_metadata)
-        #         # Does this metadata have slots?
-        #         if message_metadata and "slots" in message_metadata:
-        #             for key, value in message_metadata["slots"].items():
-        #                 logger.info(f"{key} | {value}")
-        #                 if value is not None:
-        #                     events.append(SlotSet(key=key, value=value))
-        #             break
-        # if len(message_metadata) == 0:
-        #     logger.warn(f"session_start but no metadata, tracker.events: {tracker.events}")
-        #
-        # # an `action_listen` should be added at the end as a user message follows
-        # events.append(ActionExecuted("action_listen"))
+        if metadata and "caller_contact_address" in metadata:
+            events.append(SlotSet("caller_id", metadata["caller_contact_address"]))
+        if metadata and "callee_contact_address" in metadata:
+            events.append(SlotSet("callee_id", metadata["callee_contact_address"]))
 
         return events
 
