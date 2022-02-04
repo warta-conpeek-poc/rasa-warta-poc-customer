@@ -31,7 +31,7 @@ class ActionSessionStart(Action):
     async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
 
         logging.critical("Session started !!!")
-        events = [SessionStarted()]
+        events = [SessionStarted(), ActionExecuted("action_listen")]
         metadata = tracker.get_slot("session_started_metadata")
         logging.critical(metadata)
         if metadata and "caller_contact_address" in metadata:
