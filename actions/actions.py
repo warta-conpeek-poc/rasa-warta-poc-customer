@@ -35,8 +35,8 @@ class ActionSessionStart(Action):
         metadata = tracker.get_slot("session_started_metadata")
         logging.critical(metadata)
         if metadata and "caller_contact_address" in metadata:
-            events.append(SlotSet("caller_id", metadata["caller_contact_address"]))
-        if metadata and "callee_contact_address" in metadata:
+            events.append(SlotSet("customer_phone_number", metadata["caller_contact_address"]))
+        if metadata and "service_phone_number" in metadata:
             events.append(SlotSet("callee_id", metadata["callee_contact_address"]))
 
         return events

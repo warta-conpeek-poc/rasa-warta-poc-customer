@@ -33,6 +33,9 @@ slots:
   customer_phone_number:
     type: any
     influence_conversation: false
+  service_phone_number:
+    type: any
+    influence_conversation: false
   customer_full_name:
     type: any
     influence_conversation: false
