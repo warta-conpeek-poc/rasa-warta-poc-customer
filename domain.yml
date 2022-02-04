@@ -22,6 +22,7 @@ intents:
 
 entities:
 - phone_number
+- persName
 - full_name
 - time
 - insurance_number
