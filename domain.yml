@@ -30,6 +30,9 @@ entities:
 - vehicle_registration_number
 
 slots:
+  caller_contact_address:
+    type: any
+    influence_conversation: false
   customer_phone_number:
     type: any
     influence_conversation: false
