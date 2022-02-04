@@ -24,18 +24,9 @@ import pytz
 logger = logging.getLogger(__name__)
 
 class ActionSessionStart(Action):
+
     def name(self) -> Text:
         return "action_session_start"
-
-    @staticmethod
-    def fetch_slots(tracker: Tracker, ) -> List[EventType]:
-        """Fetch SlotSet events from tracker and carry over key, value and metadata."""
-        return [
-            SlotSet(key=event.key, value=event.value, metadata=event.metadata)
-            for event in tracker.applied_events()
-            if isinstance(event, SlotSet)
-        ]
-
 
     async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
 
@@ -49,12 +40,13 @@ class ActionSessionStart(Action):
         # events.extend(self._slot_set_events_from_tracker(tracker))
         #
         # # Grab slots from metadata
-        message_metadata = []
-        for e in tracker.events[::-1]:
-          # Does this tracker event have metadata?
-            if "metadata" in e and e["metadata"] != None:
-                message_metadata = e["metadata"]
-                logging.critical(message_metadata)
+        metadata = tracker.get_slot("session_started_metadata")
+        logging.critical(metadata)
+        # for e in tracker.events[::-1]:
+        #   # Does this tracker event have metadata?
+        #     if "metadata" in e and e["metadata"] != None:
+        #         message_metadata = e["metadata"]
+        #         logging.critical(message_metadata)
         #         # Does this metadata have slots?
         #         if message_metadata and "slots" in message_metadata:
         #             for key, value in message_metadata["slots"].items():
