@@ -20,12 +20,18 @@ rules:
 #    - action: gas_meter_form
 #    - active_loop: gas_meter_form
 #
-- rule: Submit claim report form
-  condition:
-  - active_loop: claim_report_form
-  steps:
-  - action: claim_report_form
-  - active_loop: null
-  - slot_was_set:
-    - requested_slot: null
-  - action: utter_describe_incident
+
+
+#- rule: Submit customer form
+#  condition:
+#  - active_loop: customer_form
+#  steps:
+#  - action: customer_form
+#  - active_loop: null
+#  - slot_was_set:
+#    - requested_slot: null
+#  - action: utter_describe_incident
+
+
+#  wait_for_user_input: false
+

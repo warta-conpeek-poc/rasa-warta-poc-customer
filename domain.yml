@@ -5,7 +5,6 @@ session_config:
   carry_over_slots_to_new_session: false
 
 intents:
-- interview
 - connected
 - disconnected
 - asr_low_confidence
@@ -22,59 +21,129 @@ intents:
 
 entities:
 - phone_number
-- persName
-- full_name
+- customer_name
 - time
-- insurance_number
-- insurance_type
-- vehicle_registration_number
+- subject_type
 
 slots:
-  caller_contact_address:
-    type: any
-    influence_conversation: false
   customer_phone_number:
     type: any
     influence_conversation: false
   service_phone_number:
     type: any
     influence_conversation: false
-  customer_full_name:
+  subject_type:
+    type: text
+    influence_conversation: true
+  customer_name:
     type: any
     influence_conversation: false
-  claim_report_form_confirm:
+  incident_time:
     type: any
     influence_conversation: false
-  claim_report_form_counter:
+  insurance_number:
     type: any
     influence_conversation: false
+  insurance_type:
+    type: categorical
+    values:
+      - internal
+      - external
+    influence_conversation: false
+  vehicle_number:
+    type: any
+    influence_conversation: false
+  confirm_customer_phone_number:
+    type: bool
+    influence_conversation: true
+  customer_info_form_confirm_counter:
+    type: any
+    influence_conversation: false
+  status_path:
+    type: categorical
+    values:
+      - consultant_direct
+      - manager_message
+      - bot_info_inspection
+      - bot_info_withdrawal
+      - bot_info_documents
+    influence_conversation: true
+  incident_number:
+    type: text
+    influence_conversation: true
+  incident_missing_documents_list:
+    type: any
+    influence_conversation: false
+  incident_documents_submission_date:
+    type: any
+    influence_conversation: false
+  incident_inspection_date:
+    type: any
+    influence_conversation: false
+  incident_withdrawal_amount:
+    type: any
+    influence_conversation: false
+  incident_agent_email:
+    type: any
+    influence_conversation: false
+  customer_pesel:
+    type: any
+    influence_conversation: false
+  confirm_authentication_form:
+    type: any
+    influence_conversation: false
+  customer_authenticated:
+    type: bool
+    influence_conversation: true
 
 actions:
-
-- validate_claim_report_form
 - action_restarted
 - action_low_confidence
 - action_session_start
+- action_set_subject_type
+- action_init_claim_report
+- action_set_status_path
+- action_verify_incident_number
+- action_select_utter_status_bot_info
+- action_get_incident_info
+- action_perform_customer_authentication
+- validate_customer_info_form
 
 forms:
-  claim_report_form:
+  customer_info_form:
     required_slots:
-      customer_full_name:
+      customer_name:
       - type: from_text
       customer_phone_number:
       - type: from_text
-      claim_report_form_confirm:
+      confirm_customer_phone_number:
+      - type: from_text
+
+  customer_authentication_form:
+    required_slots:
+      customer_name:
+      - type: from_text
+      customer_pesel:
+      - type: from_text
+      subject_type:
+      - type: from_text
+      confirm_authentication_form:
+      - type: from_text
+
+  claim_report_form:
+    required_slots:
+      incident_time:
+      - type: from_entity
+        entity: time
+      insurance_type:
+      - type: from_entity
+        entity: insurance_type
+      insurance_number:
+      - type: from_text
+      vehicle_number:
       - type: from_text
 
 responses:
-  # UTTER -----------------------------------------------------------------------------
-  utter_interview:
-  - channel: conpeek-voice
-    custom:
-      blocks:
-      - text: "Bardzo mi się podoba"
-  - text: "Bardzo mi się podoba"
-
   # UTTER -----------------------------------------------------------------------------
   utter_greet:
   - channel: conpeek-voice
@@ -105,36 +174,117 @@ responses:
   - text: ""
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_for_assistance:
+  utter_claim_transfer:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Czy potrzebujesz Assistans?"
-  - text: "Czy potrzebujesz Assistans?"
+      - text: ""
+      end_of_conversation:
+        export:
+          next_action: "call"
+          call_number: "claim"
+  - text: ""
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_claim_report_form_confirm:
+  utter_status_transfer:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?"
-  - text: "Twoje imię i nazwisko to {customer_full_name}, a numer telefonu to {customer_phone_number}. Czy to się zgadza?"
+      - text: ""
+      end_of_conversation:
+        export:
+          next_action: "call"
+          call_number: "status"
+  - text: ""
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_customer_full_name:
+  utter_status_inspection:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Podaj proszę swoje imię i nazwisko."
-  - text: "Podaj proszę swoje imię i nazwisko."
+      - text: "Oględziny zostały zaplanowane na dzień {incident_inspection_date}. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Oględziny zostały zaplanowane na dzień {incident_inspection_date}. Dziękuję za rozmowę."
 
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_customer_phone_number:
+  utter_status_no_inspection:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy."
-  - text: "Podaj proszę swój numer telefonu. Możesz przy tym użyć klawiszy."
+      - text: "Nie została określona data oględzin. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Nie została określona data oględzin. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_withdrawal:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_no_withdrawal:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Szkoda nie zostałą oszacowana. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Szkoda nie zostałą oszacowana. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_date_list:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_date_no_list:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Dokumentacja jest kompletna. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Dokumentacja jest kompletna. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_no_date_list:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_no_date_no_list:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Dokumentacja jest kompletna. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Dokumentacja jest kompletna. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_status_message:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę."
+      end_of_conversation:
+  - text: "Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_give_assistance:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Czy potrzebujesz assistance?"
+  - text: "Czy potrzebujesz assistance?"
 
   # UTTER -----------------------------------------------------------------------------
   utter_describe_incident:
@@ -143,6 +293,86 @@ responses:
       blocks:
       - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
   - text: "Opowiedz krótko, co się stało? Co zostało uszkodzone?"
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_clarify_question:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Powiedz proszę, jakiej potrzebujesz informacji?"
+  - text: "Powiedz proszę, jakiej potrzebujesz informacji?"
+
+  # ---------------------- FORM CLAIM REPORT ------------------------------------------
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_claim_report_form_incident_time:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Powiedz proszę, kiedy doszło do zdarzenia?"
+  - text: "Powiedz proszę, kiedy doszło do zdarzenia?"
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_claim_report_form_insurance_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Proszę o podanie numeru polisy."
+  - text: "Proszę o podanie numeru polisy."
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_claim_report_form_insurance_type:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Zgłoszenie dotyczy polisy własnej, czy sprawcy?"
+  - text: "Zgłoszenie dotyczy polisy własnej, czy sprawcy?"
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_claim_report_form_vehicle_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Proszę o podanie numeru rejestracyjnego auta."
+  - text: "Proszę o podanie numeru rejestracyjnego auta."
+
+  # ---------------------- FORM CUSTOMER INFO ------------------------------------------
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_info_form_customer_name:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swoje imię i nazwisko."
+  - text: "Podaj proszę swoje imię i nazwisko."
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_info_form_customer_phone_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swój numer telefonu. Możesz do tego użyć klawiszy."
+  - text: "Podaj proszę swój numer telefonu. Możesz do tego użyć klawiszy."
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_info_form_confirm_customer_phone_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Twój numer telefonu to {customer_phone_number}. Czy to się zgadza?"
+  - text: "Twój numer telefonu to {customer_phone_number}. Czy to się zgadza?"
+
+
+
+  # ---------------------- FORM ________ ------------------------------------------
+  # UTTER -----------------------------------------------------------------------------
+  utter_give_incident_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę numer szkody."
+  - text: "Podaj proszę numer szkody."
+
+
+
+
+
+
+
+
 
   # UTTER -----------------------------------------------------------------------------
   utter_ok:

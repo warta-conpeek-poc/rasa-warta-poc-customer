@@ -2,11 +2,6 @@ version: "2.0"
 
 nlu:
 
-- intent: interview
-  examples: |
-    - nazywam się Jan Kowalski
-    - z tej strony Jan Kowalski
-
 - intent: connected
   examples: |
     - __PEER_CONNECTED__
@@ -33,13 +28,6 @@ nlu:
     - zgoda
     - zgadzam się
 
-- intent: inform
-  examples: |
-    - Jan Kowalski
-    - Karol Darwin
-    - 501003003
-    - 505033753
-
 - intent: deny
   examples: |
     - nie
@@ -48,6 +36,28 @@ nlu:
     - nie zgadzam się
     - w życiu
     - w żadnym wypadku
+
+- intent: inform
+  examples: |
+    - Jan Kowalski
+    - Karol Darwin
+    - Nazywam się Karol Darwin
+    - Moje imię i nazwisko to Karol Darwin
+    - WI735GR
+    - WSC28V6
+    - F28097816401
+    - F25502255101
+    - K14526281703
+    - wczoraj
+    - przedwczoraj
+    - piątego maja
+    - dwa dni temu temu
+    - [własnej]{"entity": "insurance_type", "value": "internal"}
+    - [mojej]{"entity": "insurance_type", "value": "internal"}
+    - dotyczy polisy [własnej]{"entity": "insurance_type", "value": "internal"}
+    - dotyczy polisy [mojej]{"entity": "insurance_type", "value": "internal"}
+    - [sprawcy]{"entity": "insurance_type", "value": "external"}
+    - dotyczy polisy [sprawcy]{"entity": "insurance_type", "value": "external"}
 
 - intent: assistance_request
   examples: |
@@ -62,27 +72,142 @@ nlu:
 - intent: claim_report
   examples: |
     - chciałbym zgłosić szkodę
+    - zgłoszenie szkody
     - sąsiad zalał mi mieszkanie
     - pralka przestała działać
     - miałem wypadek, chciałem to zgłosić
     - sprawca kolizji ma ubezpieczenie w Warcie
+    - ktoś się włamał do mojego [mieszkania]{"entity": "subject_type", "value": "property"}
+    - w [pokoju]{"entity": "subject_type", "value": "property"} pojawiły się zacieki
+    - pojawiły się zacieki na [suficie]{"entity": "subject_type", "value": "property"}
+    - pojawiły się zacieki na [ścianach]{"entity": "subject_type", "value": "property"}
+    - pękł wężyk w [łazience]{"entity": "subject_type", "value": "property"}
+    - zalało [podłogę]{"entity": "subject_type", "value": "property"}
+    - brama elektryczna w [garażu]{"entity": "subject_type", "value": "property"} przestała działać
+    - [dach]{"entity": "subject_type", "value": "property"} został uszkodzony
+    - po silnej burzy, zerwało [dachówki]{"entity": "subject_type", "value": "property"} został uszkodzony
+    - w wyniku gradobicia została uszkodzona [elewacja]{"entity": "subject_type", "value": "property"} na moim [budynku]{"entity": "subject_type", "value": "property"}
+    - piłka wybiła [okno]{"entity": "subject_type", "value": "property"}
+    - silny wiatr zerwał papę ze [stodoły]{"entity": "subject_type", "value": "property"}
+    - szkoda powstała w [mieszkaniu]{"entity": "subject_type", "value": "property"}
+    - sąsiad zalał mi [pokój]{"entity": "subject_type", "value": "property"}
+    - wybuchł pożar w [domu]{"entity": "subject_type", "value": "property"} z powodu awarii elektryki
+    - z powodu przepięcia nie działa [lodówka]{"entity": "subject_type", "value": "property"}
+    - z powodu przepięcia nie działa [pralka]{"entity": "subject_type", "value": "property"}
+    - z powodu przepięcia nie działa [zmywarka]{"entity": "subject_type", "value": "property"}
+    - z powodu przepięcia nie działa [piekarnik]{"entity": "subject_type", "value": "property"}
+    - z powodu przepięcia nie działa [mikrofala]{"entity": "subject_type", "value": "property"}
+    - w [domu]{"entity": "subject_type", "value": "property"} wybuchł pożar, wszystko się spaliło
+    - mam u Was polisę chciałem zgłosić szkode w [mieszkaniu]{"entity": "subject_type", "value": "property"}
+    - po powrocie do [domu]{"entity": "subject_type", "value": "property"} zauważyłam zacienki na suficie w łazience
+    - zauważyłam zacienki na [suficie]{"entity": "subject_type", "value": "property"} w łazience
+    - po silnych opadach deszczu w [pokoju]{"entity": "subject_type", "value": "property"} pojawiło się zalanie przy oknie dachowym
+    - ktoś popisał, zniszczył [elewację]{"entity": "subject_type", "value": "property"} na moim domu
+    - po burzy woda z ulicy wpłynęła do mojego [garażu]{"entity": "subject_type", "value": "property"}
+    - [kuchnia]{"entity": "subject_type", "value": "property"} została zalana z powodu pęknięcia wężyka z wodą
+    - na [ścianie]{"entity": "subject_type", "value": "property"} w [pokoju]{"entity": "subject_type", "value": "property"} pojawiła się mokra plama
+    - mam u Was polisę, ktoś uszkodził mi [auto]{"entity": "subject_type", "value": "vehicle"} na parkingu
+    - w nocy skradziono mi [samochód]{"entity": "subject_type", "value": "vehicle"}
+    - na autostradzie kamień uderzył mi w [szybę]{"entity": "subject_type", "value": "vehicle"}, jest pęknięta
+    - wpadłem w dziurę i uszkodziłem [zawieszenie]{"entity": "subject_type", "value": "vehicle"}
+    - sprawca cofał [na parkingu]{"entity": "subject_type", "value": "vehicle"} i uderzył w mój tylny [zderzak]{"entity": "subject_type", "value": "vehicle"}
+    - zmieniałem pas ruchu i nie zauważyłem [pojazdu]{"entity": "subject_type", "value": "vehicle"} z lewej strony, doszło do [zderzenia]{"entity": "subject_type", "value": "vehicle"}
+    - stałem na światłach, sprawca nie wyhamował i uderzył w mój [samochód]{"entity": "subject_type", "value": "vehicle"}
+    - wróciłem ze sklepu i zobaczyłem, że mam urwane [lusterko]{"entity": "subject_type", "value": "vehicle"}
+    - wyjeżdzając z garażu obtarłem prawy tylny [błotnik]{"entity": "subject_type", "value": "vehicle"}
+    - ubezpieczony u Was uszkodził mi [samochód]{"entity": "subject_type", "value": "vehicle"}
+    - nie wiem jak doszło do zdarzenia, mam uszkodzone prawe przednie [drzwi]{"entity": "subject_type", "value": "vehicle"}
+    - z ulicy z prawej strony wyjechał [samochód]{"entity": "subject_type", "value": "vehicle"}, nie zdąrzyłem [wyhamować]{"entity": "subject_type", "value": "vehicle"}
+    - na [skrzyżowaniu]{"entity": "subject_type", "value": "vehicle"} doszło do [kolizji]{"entity": "subject_type", "value": "vehicle"}
+    - chciałem zgłosić [szkodę z OC]{"entity": "subject_type", "value": "vehicle"}
+    - chciałem zgłosić [szkodę z Autocasco]{"entity": "subject_type", "value": "vehicle"}
+    - w związku z [kolizją]{"entity": "subject_type", "value": "vehicle"} mam uszkodzony [pojazd]{"entity": "subject_type", "value": "vehicle"}
+    - mój [kierowca]{"entity": "subject_type", "value": "vehicle"} zderzył się z innym [samochodem]{"entity": "subject_type", "value": "vehicle"}, chciałem zgłosić
+    - uszkodziłem [samochód]{"entity": "subject_type", "value": "vehicle"} wyjeżdzając z miejsca parkigowego
+    - mam uszkodzony [samochód]{"entity": "subject_type", "value": "vehicle"}, nie wiem jak doszło do zdarzenia
+    - myjąc [samochód]{"entity": "subject_type", "value": "vehicle"} zauważyłem uszkodzenie na tylnym [zderzaku]{"entity": "subject_type", "value": "vehicle"}
+    - jechałem drogą, nagle wyskoczył [dzik]{"entity": "subject_type", "value": "vehicle"}, doszło do [zderzenia]{"entity": "subject_type", "value": "vehicle"}
+    - szedłem chodnikiem, [potknąłem się]{"entity": "subject_type", "value": "person"} i skręciłem [nogę]{"entity": "subject_type", "value": "person"}
+    - miałem wypadek na [nartach]{"entity": "subject_type", "value": "person"}, złamałem [nogę]{"entity": "subject_type", "value": "person"}
+    - moja córka na lekcji wf skręciła [kostkę]{"entity": "subject_type", "value": "person"}
+    - miałem wypadek samochodowy, doszło do uszkodzenia [kręgosłupa]{"entity": "subject_type", "value": "person"}
+    - schodziłem ze schodów i spadając uszkodziłem [nadgarstek]{"entity": "subject_type", "value": "person"}
+    - pracując na gospodarstwie doszło do wypadku, rozciąłem [palec]{"entity": "subject_type", "value": "person"}
+    - mam złamaną [nogę]{"entity": "subject_type", "value": "person"}, upadłem wysiadając z autobusu
+    - syn w szkole skręcił [kostkę]{"entity": "subject_type", "value": "person"}
+    - będąc na stoku ktoś na mnie wpadł, bolą mnie [plecy]{"entity": "subject_type", "value": "person"}, jestem w trakcie [leczenia]{"entity": "subject_type", "value": "person"}
+    - chciałem zgłosić [szkodę osobową]{"entity": "subject_type", "value": "person"}
 
-- intent: claim_status_bot
+- intent: claim_status
   examples: |
-    - kiedy będą oględziny
+    - jaki jest status szkody
+    - co się dzieje ze zgłoszeniem
+
+- intent: claim_status_consultant_direct
+  examples: |
+    - potrzębuję pojazdu zastępczego
+    - jak wysłać dokumenty
+    - zgłaszałem szkodę, nie dostałem żadnego potwierdzenia
+    - chciałem się dowiedzieć gdzie mogę naprawiać samochód
+    - zgłosiłam szkodę, potrzebuję samochodu zastępczego
+    - chce holować samochód do warsztatu
+    - trzeba zmienić numer polisy
+    - chcę się skontaktować auto zastępcze
+    - ja zawarłam z panem ugodę tylko ja nie mam konta i nie podam konta powiedziałam żeby przelano pocztą pieniążki bym chciała dostać
+    - w sprawie korespondencji
+    - nie mogę przesłać zdjęcia
+    - załączyć dokumenty
+    - miałem nieodebrany telefon od Was
+    - ja potrzebuję podać konto swoje
+    - w sprawie naprawy pojazdu oraz pojazdu zastępczego
+    - w sprawie wynajmu pojazdu
+    - potrzebuję kopie polisy na mojego maila
+    - potrzebuję przedłużyc pojazd zastępczy
+    - auto jest w warsztacie jeszcze, auto potrzebuję
+    - dajcie mi jakiś warsztat do naprawy
+
+- intent: claim_status_manager_message
+  examples: |
+    - chciałbym porozmawiać z opiekunem szkody
+    - kiedy będzie decyzja w szkodzie
+    - w sprawie wyceny chciałem porozmawiać
+    - dostałem kosztorys, chciałem to wyjaśnić
+    - w sprawie kosztorysu chciałam się skontaktować z opiekunem
+    - co z moją szkodą ile można czekać
+    - zawarcia porozumienia
+    - chciałbym się dowiedzieć kiedy zostanie wypłat wypłacono odszkodowanie
+    - chcę się skontaktować w sprawie omówienia szkody
+    - chciałem się dowiedzieć czy mogę samochód naprawiać czy będę musiał czekać na rzeczoznawcę
+    - chcę się skontaktować z opiekunem
+    - w sprawie ugody
+    - chcę dowiedzieć się jak postępowanie w sprawie szkody
+    - kiedy dostanę pieniążki
+    - chce rozmawiać z osobą odpowiedzialną za moją szkodę
+    - chce porozmawiać o wycenie
+    - kiedy zakończy się szkoda
+    - rozmawiać o kosztorysie
+    - nie zgadzam się z wyceną
+
+- intent: claim_status_bot_info_inspection
+  examples: |
     - czy przyjedzie rzeczoznawca
-    - wysłałem dokumenty czy one już dotarły
+    - zgłosiłem szkodę, czekam na oględziny, kiedy się ktoś odedzwie
+    - kiedy będą oględziny
 
-- intent: claim_status_consultant
+- intent: claim_status_bot_info_documents
   examples: |
-    - dzwonie w sprawie pojazdu zastępczego
+    - czy dotarły dokumenty
+    - chciałam się dowiedzieć czy są wszystkie dokumenty
+    - w sprawie dosyłania dokumentów dotyczących szkody
+    - dokumenty z mojej strony które były potrzebne są wysłane
+    - chciałbym zapytać czy zdjęcia doszły
+    - chciałabym porozmawiać jakie dokumenty jeszcze dostarczyć
 
-#- intent: agent_insurance_info
-#  examples: |
-#    -
-#
-#- intent: customer_insurance_info
-#  examples: |
-#    -
+- intent: claim_status_bot_info_withdrawal
+  examples: |
+    - jaka jest kwota wypłaty
+    - jak oszacowana jest szkoda
+    - ile jest na kosztorysie
+
 
 
