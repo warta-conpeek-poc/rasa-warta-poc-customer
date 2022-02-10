@@ -12,7 +12,8 @@ pipeline:
     min_ngram: 1
     max_ngram: 4
   - name: DIETClassifier
-    epochs: 200
+    constrain_similarities: True
+    epochs: 150
   - name: EntitySynonymMapper
   - name: "DucklingEntityExtractor"
     url: "http://localhost:8000"
@@ -20,11 +21,11 @@ pipeline:
     locale: "pl_PL"
     timezone: "Europe/Warsaw"
     timeout : 3
-
 policies:
   - name: MemoizationPolicy
+    constrain_similarities: True
   - name: TEDPolicy
-    max_history: 8
-    epochs: 200
-    constrain_similarities: true
+    constrain_similarities: True
+    max_history: 10
+    epochs: 150
   - name: RulePolicy

@@ -18,6 +18,9 @@ intents:
 - claim_status_consultant
 - agent_insurance_info
 - customer_insurance_info
+- customer_question_general
+- customer_question_payments
+- customer_question_validity
 
 entities:
 - phone_number
@@ -35,6 +38,9 @@ slots:
   subject_type:
     type: text
     influence_conversation: true
+  subject_type_genitivus_pl:
+    type: text
+    influence_conversation: false
   customer_name:
     type: any
     influence_conversation: false
@@ -59,6 +65,9 @@ slots:
   customer_info_form_confirm_counter:
     type: any
     influence_conversation: false
+  status_path_flag:
+    type: bool
+    influence_conversation: true
   status_path:
     type: categorical
     values:
@@ -106,8 +115,10 @@ actions:
 - action_verify_incident_number
 - action_select_utter_status_bot_info
 - action_get_incident_info
+- action_get_insurance_info
 - action_perform_customer_authentication
 - validate_customer_info_form
+- validate_customer_authentication_form
 
 forms:
   customer_info_form:
@@ -126,7 +137,8 @@ forms:
       customer_pesel:
       - type: from_text
       subject_type:
-      - type: from_text
+      - type: from_entity
+        entity: subject_type
       confirm_authentication_form:
       - type: from_text
 
@@ -195,6 +207,18 @@ responses:
         export:
           next_action: "call"
           call_number: "status"
+  - text: ""
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_customer_question_transfer:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: ""
+      end_of_conversation:
+        export:
+          next_action: "call"
+          call_number: "customer_question"
   - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -357,7 +381,37 @@ responses:
 
 
 
-  # ---------------------- FORM ________ ------------------------------------------
+  # ---------------------- FORM CUSTOMER AUTHENTICATION ------------------------------------------
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_authentication_form_customer_name:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swoje imię i nazwisko."
+  - text: "Podaj proszę swoje imię i nazwisko."
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_authentication_form_customer_pesel:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę swój numer pesel."
+  - text: "Podaj proszę swój numer pesel."
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_authentication_form_subject_type:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Powiedz proszę, czy zgłoszona szkoda dotyczy nieruchomości, pojazdu czy osoby?"
+  - text: "Powiedz proszę, czy zgłoszona szkoda dotyczy nieruchomości, pojazdu czy osoby?"
+  # UTTER -----------------------------------------------------------------------------
+  utter_ask_customer_authentication_form_confirm_authentication_form:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Twoje imię i nazwisko to {customer_name}, numer pesel to {customer_pesel}, a zgłoszenie dotyczy {subject_type_genitivus_pl}. Czy to się zgadza?"
+  - text: "Twoje imię i nazwisko to {customer_name}, numer pesel to {customer_pesel}, a zgłoszenie dotyczy {subject_type_genitivus_pl}. Czy to się zgadza?"
+
+
   # UTTER -----------------------------------------------------------------------------
   utter_give_incident_number:
   - channel: conpeek-voice
@@ -365,6 +419,14 @@ responses:
       blocks:
       - text: "Podaj proszę numer szkody."
   - text: "Podaj proszę numer szkody."
+
+  # UTTER -----------------------------------------------------------------------------
+  utter_give_insurance_number:
+  - channel: conpeek-voice
+    custom:
+      blocks:
+      - text: "Podaj proszę numer polisy."
+  - text: "Podaj proszę numer polisy."
 
 
 

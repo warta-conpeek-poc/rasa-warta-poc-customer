@@ -125,6 +125,43 @@ class ValidateCustomerInfoForm(FormValidationAction):
             else:
                 return {"customer_info_form_confirm_counter": customer_info_form_confirm_counter, "confirm_customer_phone_number": None, "customer_phone_number": None}
 
+class ValidateCustomerAuthenticationForm(FormValidationAction):
+    def name(self) -> Text:
+        return "validate_customer_authentication_form"
+
+    def validate_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical(f"Validate subject type: {slot_value}")
+        mapping = {
+            "person": "osoby",
+            "vehicle": "pojazdu",
+            "property": "nieruchomości"
+        }
+        if slot_value in ["person", "vehicle", "property"]:
+            subject_type_genitivus_pl = mapping[slot_value]
+        else:
+            subject_type_genitivus_pl = "szkody"
+        return {
+            "subject_type": slot_value,
+            "subject_type_genitivus_pl": subject_type_genitivus_pl
+        }
+
+    def validate_confirm_authentication_form(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        confirm_limit = 2
+        customer_info_form_confirm_counter = tracker.get_slot("customer_info_form_confirm_counter")
+        logging.critical(f"customer_info_form_confirm_counter: {customer_info_form_confirm_counter}")
+        if customer_info_form_confirm_counter:
+            customer_info_form_confirm_counter += 1
+        else:
+            customer_info_form_confirm_counter = 1
+        latest_intent = tracker.get_intent_of_latest_message()
+        if latest_intent == "affirm":
+            return {"customer_info_form_confirm_counter": 0, "confirm_customer_phone_number": True}
+        else:
+            if customer_info_form_confirm_counter > confirm_limit:
+                return {"customer_info_form_confirm_counter": 0, "confirm_customer_phone_number": False, "customer_phone_number": "unconfirmed"}
+            else:
+                return {"customer_info_form_confirm_counter": customer_info_form_confirm_counter, "confirm_customer_phone_number": None, "customer_phone_number": None}
+
 class ActionSetSubjectType(Action):
 
     def name(self) -> Text:
@@ -156,6 +193,7 @@ class ActionSetStatusPath(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
         status_path = tracker.get_slot("status_path")
+        status_path_flag = True
         if not status_path:
             latest_intent = tracker.get_intent_of_latest_message()
             logging.critical(f"Intent for status path: {latest_intent}")
@@ -171,9 +209,11 @@ class ActionSetStatusPath(Action):
                 status_path = "bot_info_documents"
             else:
                 status_path = None
+                status_path_flag = False
                 logging.critical("No status path !!!")
         logging.critical(f"Setting slot status_path to {status_path}")
         events.append(SlotSet("status_path", status_path))
+        events.append(SlotSet("status_path_flag", status_path_flag))
         return events
 
 class ActionGetIncidentInfo(Action):

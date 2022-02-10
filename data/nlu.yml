@@ -45,6 +45,9 @@ nlu:
     - Moje imię i nazwisko to Karol Darwin
     - WI735GR
     - WSC28V6
+    - wu 21 32 456 32 345
+    - wanda 345 23 456 43 23
+    - we 3 2 3 4 5 7 5 4 3 2 3 4
     - F28097816401
     - F25502255101
     - K14526281703
@@ -58,6 +61,9 @@ nlu:
     - dotyczy polisy [mojej]{"entity": "insurance_type", "value": "internal"}
     - [sprawcy]{"entity": "insurance_type", "value": "external"}
     - dotyczy polisy [sprawcy]{"entity": "insurance_type", "value": "external"}
+    - [nieruchomości]{"entity": "subject_type", "value": "property"}
+    - [pojazdu]{"entity": "subject_type", "value": "vehicle"}
+    - [osoby]{"entity": "subject_type", "value": "person"}
 
 - intent: assistance_request
   examples: |
@@ -208,6 +214,45 @@ nlu:
     - jaka jest kwota wypłaty
     - jak oszacowana jest szkoda
     - ile jest na kosztorysie
+
+- intent: customer_question_general
+  examples: |
+    - przyszło mi ubezpieczenie na przyczepkę, ja ją sprzedałem czy z Panią to załatwię
+    - chciałbym wypowiedzieć umowę ubezpieczenia na samochód, czy ja mogę to zrobić teraz przez telefon
+    - kupiłem samochód i ubepzieczenie przeszło na mnie, ja go przerejestrowałem czy ja muszę teraz aneks do umowy żeby przeszło na mnie
+    - potrzebuję historię ubezpieczenia mojego samochodu
+    - mam zawartą polisę AC na pojazd i teraz (wymienia produkty), w nocy miałem próbę kradzieży i są uszkodzenia, czy AC to obejmuje czy nie
+    - ja mam u państwa ubezpieczony samochód i dopisałem współwłaściciela i chciałbym skorygować polisę OC
+    - takie pytanko, bo w tamtym roku kupiłem auto obecne poprzednie OC wypowiedziałem, ubezpieczyłem w swojej firmie, teraz mi przyszedł list od Was
+    - potrzebuję zaświadczenie o przebiegu ubezpieczenia, czy otrzymam coś takiego na mail
+    - kupiłam samochód, wczoraj skończyła się polisa, co mam zrobić, czy mogę ją wypowiedzieć, czy jest kontynuowana
+    - mam u Państwa samochód, pojazd tylko, że już go sprzedałam, ale polisę mam do marca, mówię o AC, ale chciałam to Państwu zgłosić
+
+- intent: customer_question_payments
+  examples: |
+    - mam polisę u Was, czy ona jest opłacona
+    - do kiedy muszę zapłacić polisę
+    - chciałem sprawdzić czy moja polisa na skuter jest opłacona
+    - może pani sprawdzić czy jest opłacona składka
+    - chciałem się dowiedzieć czy pieniądze są zaksięgowane
+    - jaką składę mam zapłacić i do kiedy
+    - chyba nie zapłaciłem raty za samochód
+    - chciałem się dowiedzieć o wpłacie na polisie
+    - ubiega termin płatności raty
+
+- intent: customer_question_validity
+  examples: |
+    - chciałem się dowiedzieć czy mam ważne ubezpieczenie OC
+    - czy  moja polisa jest ważna
+    - czy polisa o nr…. Jest aktywna
+    - do kiedy obowiązuje polisa
+    - czy polisa jest jeszcze ważna
+    - kiedy kończy mi się moja polisa
+    - mam polisę od poprzedniego właściciela, czy ona jest obowiązująca
+    - chcę się dowiedzieć do kiedy mam polisę
+    - może mi Pani sprawdzić czy polisa jest aktywa
+    - czy ta polisa jest ważna
+
 
 
 
