@@ -17,6 +17,14 @@ nlu:
     - __LOW_CONFIDENCE__
     - __low_confidence__
 
+- intent: out_of_scope
+  examples: |
+    - jaki dziś mamy dzień?
+    - jak masz na imię?
+    - ile masz lat?
+    - jaka jest pogoda?
+
+
 - intent: affirm
   examples: |
     - tak
@@ -39,18 +47,6 @@ nlu:
 
 - intent: inform
   examples: |
-    - Jan Kowalski
-    - Karol Darwin
-    - Nazywam się Karol Darwin
-    - Moje imię i nazwisko to Karol Darwin
-    - WI735GR
-    - WSC28V6
-    - wu 21 32 456 32 345
-    - wanda 345 23 456 43 23
-    - we 3 2 3 4 5 7 5 4 3 2 3 4
-    - F28097816401
-    - F25502255101
-    - K14526281703
     - wczoraj
     - przedwczoraj
     - piątego maja
@@ -63,6 +59,8 @@ nlu:
     - dotyczy polisy [sprawcy]{"entity": "insurance_type", "value": "external"}
     - [nieruchomości]{"entity": "subject_type", "value": "property"}
     - [pojazdu]{"entity": "subject_type", "value": "vehicle"}
+    - dotyczy [samochodu]{"entity": "subject_type", "value": "vehicle"}
+    - dotyczy [auta]{"entity": "subject_type", "value": "vehicle"}
     - [osoby]{"entity": "subject_type", "value": "person"}
 
 - intent: assistance_request
@@ -105,8 +103,9 @@ nlu:
     - z powodu przepięcia nie działa [mikrofala]{"entity": "subject_type", "value": "property"}
     - w [domu]{"entity": "subject_type", "value": "property"} wybuchł pożar, wszystko się spaliło
     - mam u Was polisę chciałem zgłosić szkode w [mieszkaniu]{"entity": "subject_type", "value": "property"}
-    - po powrocie do [domu]{"entity": "subject_type", "value": "property"} zauważyłam zacienki na suficie w łazience
-    - zauważyłam zacienki na [suficie]{"entity": "subject_type", "value": "property"} w łazience
+    - po powrocie do [domu]{"entity": "subject_type", "value": "property"} zauważyłam zacienki na suficie w [łazience]{"entity": "subject_type", "value": "property"}
+    - zauważyłam zacienki na [suficie]{"entity": "subject_type", "value": "property"} w [łazience]{"entity": "subject_type", "value": "property"}
+    - mam zalaną [łazienkę]{"entity": "subject_type", "value": "property"}
     - po silnych opadach deszczu w [pokoju]{"entity": "subject_type", "value": "property"} pojawiło się zalanie przy oknie dachowym
     - ktoś popisał, zniszczył [elewację]{"entity": "subject_type", "value": "property"} na moim domu
     - po burzy woda z ulicy wpłynęła do mojego [garażu]{"entity": "subject_type", "value": "property"}
@@ -231,6 +230,7 @@ nlu:
 - intent: customer_question_payments
   examples: |
     - mam polisę u Was, czy ona jest opłacona
+    - mam u was polisę [OC]{"entity": "subject_type", "value": "vehicle"}, czy ona jest opłacona
     - do kiedy muszę zapłacić polisę
     - chciałem sprawdzić czy moja polisa na skuter jest opłacona
     - może pani sprawdzić czy jest opłacona składka

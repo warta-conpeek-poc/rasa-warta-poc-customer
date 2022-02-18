@@ -1,22 +1,29 @@
 version: "2.0"
 
 stories:
+
 # Assistance flow
 - story: assistance request
   steps:
+  - intent: connected
+  - action: utter_greet
   - intent: assistance_request
   - action: utter_assistance_transfer
 
-# Claim flow
 - story: claim report with assistance
   steps:
+  - intent: connected
+  - action: utter_greet
   - intent: claim_report
   - action: utter_give_assistance
   - intent: affirm
   - action: utter_assistance_transfer
 
+# Claim flow
 - story: claim report without customer info
   steps:
+  - intent: connected
+  - action: utter_greet
   - intent: claim_report
   - action: utter_give_assistance
   - intent: deny
@@ -97,6 +104,8 @@ stories:
 # Status flow
 - story: status without incident number
   steps:
+  - intent: connected
+  - action: utter_greet
   - or:
     - intent: claim_status
     - intent: claim_status_consultant_direct
@@ -114,6 +123,8 @@ stories:
 
 - story: status without clarifying
   steps:
+  - intent: connected
+  - action: utter_greet
   - or:
     - intent: claim_status
     - intent: claim_status_consultant_direct
@@ -138,6 +149,8 @@ stories:
 
 - story: status with clarifying
   steps:
+  - intent: connected
+  - action: utter_greet
   - or:
     - intent: claim_status
     - intent: claim_status_consultant_direct
@@ -226,21 +239,40 @@ stories:
     - status_path: "bot_info_withdrawal"
   - action: action_select_utter_status_bot_info
 
-
 # Customer question flow
 - story: question general
   steps:
+  - intent: connected
+  - action: utter_greet
   - intent: customer_question_general
   - action: utter_customer_question_transfer
 
 - story: insurance question without insurance number
   steps:
+  - intent: connected
+  - action: utter_greet
+  - or:
+    - intent: customer_question_payments
+    - intent: customer_question_validity
+  - action: action_set_customer_question_path
+  - action: insurance_number_form
+  - active_loop: insurance_number_form
+  - active_loop: null
   - slot_was_set:
     - insurance_number_verified: false
   - action: utter_customer_question_transfer
 
 - story: insurance question with insurance number
   steps:
+  - intent: connected
+  - action: utter_greet
+  - or:
+    - intent: customer_question_payments
+    - intent: customer_question_validity
+  - action: action_set_customer_question_path
+  - action: insurance_number_form
+  - active_loop: insurance_number_form
+  - active_loop: null
   - slot_was_set:
     - insurance_number_verified: true
   - action: customer_authentication_form

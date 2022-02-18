@@ -393,31 +393,43 @@ class ValidateInsuranceNumberForm(FormValidationAction):
         logging.critical(f"Got insurance number: {insurance_number} with matching result: {match}")
         if match and insurance_number in baza_polisy_dict:
             logging.critical(f"Incident {insurance_number} found in database.")
-            insurance_payment_1_value = baza_polisy_dict[insurance_number]["Kwota płatności 1"]
-            if baza_polisy_dict[insurance_number]["Czy opłacona 1?"] == "TAK":
-                insurance_payment_1_done = True
-            else:
-                insurance_payment_1_done = False
-            insurance_payment_1_date = baza_polisy_dict[insurance_number]["Termin płatności 1"]
-            insurance_payment_2_value = baza_polisy_dict[insurance_number]["Kwota płatności 2"]
+            next_installment_number = None
+            next_installment_amount = None
+            next_installment_date = None
+            insurance_payment_2_amount = baza_polisy_dict[insurance_number]["Kwota płatności 2"]
+            insurance_payment_2_date = baza_polisy_dict[insurance_number]["Termin płatności 2"]
             if baza_polisy_dict[insurance_number]["Czy opłacona 2?"] == "TAK":
                 insurance_payment_2_done = True
             else:
                 insurance_payment_2_done = False
-            insurance_payment_2_date = baza_polisy_dict[insurance_number]["Termin płatności 2"]
+                next_installment_number = 2
+                next_installment_amount = insurance_payment_2_amount
+                next_installment_date = insurance_payment_2_date
+            insurance_payment_1_amount = baza_polisy_dict[insurance_number]["Kwota płatności 1"]
+            insurance_payment_1_date = baza_polisy_dict[insurance_number]["Termin płatności 1"]
+            if baza_polisy_dict[insurance_number]["Czy opłacona 1?"] == "TAK":
+                insurance_payment_1_done = True
+            else:
+                insurance_payment_1_done = False
+                next_installment_number = 1
+                next_installment_amount = insurance_payment_1_amount
+                next_installment_date = insurance_payment_1_date
             insurance_active = baza_polisy_dict[insurance_number]["Polisa aktywna"]
-            insurance_end_date = baza_polisy_dict[insurance_number]["2022-12-04"]
+            insurance_end_date = baza_polisy_dict[insurance_number]["Data zakończenia"]
             slots = {
                 "insurance_number": insurance_number,
                 "insurance_number_verified": True,
-                "insurance_payment_1_value": insurance_payment_1_value,
+                "insurance_payment_1_amount": insurance_payment_1_amount,
                 "insurance_payment_1_done": insurance_payment_1_done,
                 "insurance_payment_1_date": insurance_payment_1_date,
-                "insurance_payment_2_value": insurance_payment_2_value,
+                "insurance_payment_2_amount": insurance_payment_2_amount,
                 "insurance_payment_2_done": insurance_payment_2_done,
                 "insurance_payment_2_date": insurance_payment_2_date,
                 "insurance_active": insurance_active,
                 "insurance_end_date": insurance_end_date,
+                "next_installment_number": next_installment_number,
+                "next_installment_amount": next_installment_amount,
+                "next_installment_date": next_installment_date,
                 "validate_counter": 0
             }
             logging.critical("Setting slots:")
@@ -584,28 +596,19 @@ class ActionSetCustomerQuestionPath(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        status_path = tracker.get_slot("customer_question_path")
-        status_path_flag = True
-        if not status_path:
+        customer_question_path = tracker.get_slot("customer_question_path")
+        if not customer_question_path:
             latest_intent = tracker.get_intent_of_latest_message()
-            logging.critical(f"Intent for status path: {latest_intent}")
-            if latest_intent == "claim_status_consultant_direct":
-                status_path = "consultant_direct"
-            elif latest_intent == "claim_status_manager_message":
-                status_path = "manager_message"
-            elif latest_intent == "claim_status_bot_info_inspection":
-                status_path = "bot_info_inspection"
-            elif latest_intent == "claim_status_bot_info_withdrawal":
-                status_path = "bot_info_withdrawal"
-            elif latest_intent == "claim_status_bot_info_documents":
-                status_path = "bot_info_documents"
+            logging.critical(f"Intent for customer question path: {latest_intent}")
+            if latest_intent == "customer_question_payments":
+                customer_question_path = "bot_info_payments"
+            elif latest_intent == "customer_question_validity":
+                customer_question_path = "bot_info_validity"
             else:
-                status_path = None
-                status_path_flag = False
-                logging.critical("No status path !!!")
-        logging.critical(f"Setting slot status_path to {status_path}")
-        events.append(SlotSet("status_path", status_path))
-        events.append(SlotSet("status_path_flag", status_path_flag))
+                customer_question_path = None
+                logging.critical("No customer question path !!!")
+        logging.critical(f"Setting slot customer_question_path to {customer_question_path}")
+        events.append(SlotSet("customer_question_path", customer_question_path))
         return events
 
 
@@ -642,6 +645,35 @@ class ActionSelectUtterStatusBotInfo(Action):
                     events.append(FollowupAction("utter_status_no_date_list"))
                 else:
                     events.append(FollowupAction("utter_status_no_date_no_list"))
+        else:
+            events.append(FollowupAction("utter_error"))
+        return events
+
+class ActionSelectUtterCustomerQuestionBotInfo(Action):
+
+    def name(self) -> Text:
+        return "action_select_utter_customer_question_bot_info"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        events = []
+        customer_question_path = tracker.get_slot("customer_question_path")
+        if customer_question_path == "bot_info_payments":
+            insurance_payment_1_done = tracker.get_slot("insurance_payment_1_done")
+            # insurance_payment_1_value = tracker.get_slot("insurance_payment_1_value")
+            # insurance_payment_1_date = tracker.get_slot("insurance_payment_1_date")
+            insurance_payment_2_done = tracker.get_slot("insurance_payment_2_done")
+            # insurance_payment_2_value = tracker.get_slot("insurance_payment_2_value")
+            # insurance_payment_2_date = tracker.get_slot("insurance_payment_2_date")
+            if insurance_payment_1_done and insurance_payment_2_done:
+                events.append(FollowupAction("utter_customer_question_payment_done"))
+            else:
+                events.append(FollowupAction("utter_customer_question_payment_waiting"))
+        elif customer_question_path == "bot_info_validity":
+            insurance_active = tracker.get_slot("insurance_active")
+            if insurance_active:
+                events.append(FollowupAction("utter_customer_question__insurance_active"))
+            else:
+                events.append(FollowupAction("utter_customer_question__insurance_inactive"))
         else:
             events.append(FollowupAction("utter_error"))
         return events
