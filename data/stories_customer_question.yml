@@ -12,20 +12,22 @@ stories:
   steps:
   - action: insurance_number_form
   - active_loop: insurance_number_form
-  - active_loop: null
   - slot_was_set:
     - insurance_number_verified: false
+  - active_loop: null
   - action: utter_customer_question_transfer
 
 - story: insurance question with insurance number
   steps:
   - action: insurance_number_form
   - active_loop: insurance_number_form
-  - active_loop: null
   - slot_was_set:
     - insurance_number_verified: true
+  - active_loop: null
   - action: customer_authentication_form
   - active_loop: customer_authentication_form
+  - slot_was_set:
+    - subject_type: any
   - active_loop: null
   - action: action_perform_customer_authentication
   - checkpoint: customer_question_customer_authentication
