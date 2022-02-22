@@ -80,6 +80,12 @@ slots:
   insurance_active:
     type: any
     influence_conversation: false
+  insurance_customer_name:
+    type: any
+    influence_conversation: false
+  insurance_customer_pesel:
+    type: any
+    influence_conversation: false
   insurance_end_date:
     type: any
     influence_conversation: false
@@ -106,6 +112,9 @@ slots:
     influence_conversation: false
   insurance_payment_2_done:
     type: bool
+    influence_conversation: false
+  insurance_subject_type:
+    type: any
     influence_conversation: false
   insurance_type:
     type: any
@@ -252,8 +261,8 @@ responses:
       - text: ""
       end_of_conversation:
         export:
-          next_action: "call"
-          call_number: "claim"
+          next_action: "project"
+          call_number: "Claim Request"
   - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -264,8 +273,12 @@ responses:
       - text: ""
       end_of_conversation:
         export:
-          next_action: "call"
-          call_number: "status"
+          next_action: "project"
+          project_name: "Claim Status"
+          customer_name: "{customer_name}"
+          customer_pesel: "{customer_pesel}"
+          subject_type: "{subject_type}"
+          insurance_number: "{insurance_number}"
   - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -276,8 +289,12 @@ responses:
       - text: ""
       end_of_conversation:
         export:
-          next_action: "call"
-          call_number: "customer_question"
+          next_action: "project"
+          project_name: "Customer Care"
+          customer_name: "{customer_name}"
+          customer_pesel: "{customer_pesel}"
+          subject_type: "{subject_type}"
+          insurance_number: "{insurance_number}"
   - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -294,8 +311,8 @@ responses:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: 'Do zapłaty jest {next_installment_number} rata w wysokości {next_installment_amount} złotych. Termin płatności to {next_installment_date}.'
-        ssml: 'Do zapłaty jest <say-as interpret-as="ordinal">{next_installment_number}</say-as> rata w wysokości {next_installment_amount} złotych. Termin płatności to {next_installment_date}.'
+      - text: 'Do zapłaty jest {next_installment_number} rata w wysokości {next_installment_amount}. Termin płatności to {next_installment_date}.'
+        ssml: 'Do zapłaty jest <say-as interpret-as="ordinal">{next_installment_number}</say-as> rata w wysokości {next_installment_amount}. Termin płatności to <say-as interpret-as="date" format="yyyy-mm-dd">{next_installment_date}</say-as>.'
       end_of_conversation:
   - text: 'Do zapłaty jest {next_installment_number} rata w wysokości {next_installment_amount} złotych. Termin płatności to {next_installment_date}.'
 
@@ -304,18 +321,20 @@ responses:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Twoja polisa jest aktywna do dnia {insurance_end_date}."
+      - text: 'Twoja polisa jest aktywna do dnia {insurance_end_date}.'
+        ssml: 'Twoja polisa jest aktywna do dnia <say-as interpret-as="date" format="yyyy-mm-dd">{insurance_end_date}</say-as>.'
       end_of_conversation:
-  - text: "Twoja polisa jest aktywna do dnia {insurance_end_date}."
+  - text: 'Twoja polisa jest aktywna do dnia {insurance_end_date}.'
 
   # UTTER -----------------------------------------------------------------------------
   utter_customer_question__insurance_inactive:
   - channel: conpeek-voice
     custom:
       blocks:
-      - text: "Twoja polisa jest już nieaktywna. Jej ważność upłynęła w dniu {insurance_end_date}."
+      - text: 'Twoja polisa jest już nieaktywna. Jej ważność upłynęła w dniu {insurance_end_date}.'
+        ssml: 'Twoja polisa jest już nieaktywna. Jej ważność upłynęła w dniu <say-as interpret-as="date" format="yyyy-mm-dd">{insurance_end_date}</say-as>.'
       end_of_conversation:
-  - text: "Twoja polisa jest już nieaktywna. Jej ważność upłynęła w dniu {insurance_end_date}."
+  - text: 'Twoja polisa jest już nieaktywna. Jej ważność upłynęła w dniu {insurance_end_date}.'
 
 
   # UTTER -----------------------------------------------------------------------------
@@ -501,7 +520,16 @@ responses:
     custom:
       blocks:
       - text: "Podaj proszę numer polisy."
+        sentence_time_max: 30000
         sentence_end_silence_time: 3000
+        speech_contexts:
+        - phrases:
+            - "$OPERAND"
+        text_conditional_actions:
+        -  regexp: "[0-9]{12}$"
+           end_sentence: True
+           dtmf_timeout: 5
+           remove_whitespace: True
   - text: "Podaj proszę numer polisy."
 
   # ---------------------- FORM CUSTOMER AUTHENTICATION ------------------------------------------
@@ -526,6 +554,15 @@ responses:
     custom:
       blocks:
       - text: "Podaj proszę swój numer pesel."
+        sentence_time_max: 30000
         sentence_end_silence_time: 3000
+        speech_contexts:
+        - phrases:
+            - "$OPERAND"
+        text_conditional_actions:
+        -  regexp: "[0-9]{11}$"
+           end_sentence: True
+           dtmf_timeout: 5
+           remove_whitespace: True
   - text: "Podaj proszę swój numer pesel."
 

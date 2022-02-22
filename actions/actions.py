@@ -21,7 +21,6 @@ from rasa_sdk.types import DomainDict
 import re
 import logging
 import datetime
-import pytz
 import csv
 
 
@@ -104,6 +103,7 @@ class ActionLowConfidence(Action):
             dispatcher.utter_message(json_message=custom_message)
         else:
             dispatcher.utter_message(text=text_message)
+        return [UserUtteranceReverted()]
 
 class ActionOutOfScope(Action):
 
@@ -416,9 +416,15 @@ class ValidateInsuranceNumberForm(FormValidationAction):
                 next_installment_date = insurance_payment_1_date
             insurance_active = baza_polisy_dict[insurance_number]["Polisa aktywna"]
             insurance_end_date = baza_polisy_dict[insurance_number]["Data zakończenia"]
+            insurance_subject_type = baza_polisy_dict[insurance_number]["Przedmiot ubezpieczenia"]
+            insurance_customer_pesel = baza_polisy_dict[insurance_number]["Pesel ubezpieczonego"]
+            insurance_customer_name = baza_polisy_dict[insurance_number]["Imię i nazwisko ubezpieczonego"]
             slots = {
                 "insurance_number": insurance_number,
                 "insurance_number_verified": True,
+                "insurance_subject_type": insurance_subject_type,
+                "insurance_customer_pesel": insurance_customer_pesel,
+                "insurance_customer_name": insurance_customer_name,
                 "insurance_payment_1_amount": insurance_payment_1_amount,
                 "insurance_payment_1_done": insurance_payment_1_done,
                 "insurance_payment_1_date": insurance_payment_1_date,
@@ -454,13 +460,29 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_customer_authentication_form"
 
+    async def extract_subject_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
+        logging.critical("Y"*10)
+        subject_type = tracker.get_slot("subject_type")
+        if subject_type:
+            logging.critical(f"Slot subject_type exists with value {subject_type}")
+        if not subject_type:
+            for entity in tracker.latest_message['entities']:
+                entity_name = entity["entity"]
+                if entity_name == "subject_type":
+                    entity_value = entity["value"]
+                    logging.critical(f"Found entity {entity_name} with value {entity_value}")
+                    subject_type = entity_value
+        return {"subject_type": subject_type}
+
     def validate_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical("X"*10)
+        logging.critical(slot_value)
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        if slot_value in ["person", "vehicle", "property"]:
+        if slot_value in ["PERSONAL", "MOTOR", "PROPERTY"]:
             slots = {
                 "subject_type": slot_value,
                 "validate_counter": 0
@@ -476,6 +498,7 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
                     "subject_type": None,
                     "validate_counter": validate_counter
                 }
+        logging.critical(slots)
         return slots
 
     def validate_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
@@ -516,7 +539,7 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
                 customer_pesel += word
         prog = re.compile('^\d{11}$', re.IGNORECASE)
         match = prog.match(customer_pesel)
-        logging.critical(f"Got customer pesel: {customer_pesel} with matching result: {match}")
+        logging.critical(f"Got customer pesel: {customer_pesel} from slot_value: {slot_value} with matching result: {match}")
         if match :
             slots = {
                 "customer_pesel": customer_pesel,
@@ -533,6 +556,7 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
                     "customer_pesel": None,
                     "validate_counter": validate_counter
                 }
+        logging.critical(slots)
         return slots
 
 class ActionSetSubjectType(Action):
@@ -554,7 +578,7 @@ class ActionInitClaimReport(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
         subject_type = tracker.get_slot("subject_type")
-        if subject_type != "vehicle":
+        if subject_type != "MOTOR":
             events.append(SlotSet("vehicle_number", "-"))
         return events
 
@@ -659,11 +683,7 @@ class ActionSelectUtterCustomerQuestionBotInfo(Action):
         customer_question_path = tracker.get_slot("customer_question_path")
         if customer_question_path == "bot_info_payments":
             insurance_payment_1_done = tracker.get_slot("insurance_payment_1_done")
-            # insurance_payment_1_value = tracker.get_slot("insurance_payment_1_value")
-            # insurance_payment_1_date = tracker.get_slot("insurance_payment_1_date")
             insurance_payment_2_done = tracker.get_slot("insurance_payment_2_done")
-            # insurance_payment_2_value = tracker.get_slot("insurance_payment_2_value")
-            # insurance_payment_2_date = tracker.get_slot("insurance_payment_2_date")
             if insurance_payment_1_done and insurance_payment_2_done:
                 events.append(FollowupAction("utter_customer_question_payment_done"))
             else:
@@ -685,6 +705,35 @@ class ActionPerformCustomerAuthentication(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        events.append(SlotSet("customer_authenticated", True))
+        insurance_subject_type = tracker.get_slot("insurance_subject_type")
+        insurance_customer_name = tracker.get_slot("insurance_customer_name")
+        insurance_customer_pesel = tracker.get_slot("insurance_customer_pesel")
+        subject_type = tracker.get_slot("subject_type")
+        customer_name = tracker.get_slot("customer_name")
+        customer_pesel = tracker.get_slot("customer_pesel")
+
+        auth_level = 0
+
+        # Compare customer name
+        logging.critical(f"insurance_customer_name: {insurance_customer_name}, customer_name: {customer_name}")
+        insurance_customer_name_set = set(insurance_customer_name.split(' '))
+        customer_name_set = set(customer_name.split(' '))
+        if insurance_customer_name_set == customer_name_set:
+            auth_level += 1
+
+        # Compare subject type
+        logging.critical(f"insurance_subject_type: {insurance_subject_type}, subject_type: {subject_type}")
+        if insurance_subject_type == subject_type:
+            auth_level += 1
+
+        # Compare customer pesel
+        logging.critical(f"insurance_customer_pesel: {insurance_customer_pesel}, customer_pesel: {customer_pesel}")
+        if insurance_customer_pesel == customer_pesel:
+            auth_level += 1
+
+        if auth_level > 1:
+            events.append(SlotSet("customer_authenticated", True))
+        else:
+            events.append(SlotSet("customer_authenticated", False))
         return events
 

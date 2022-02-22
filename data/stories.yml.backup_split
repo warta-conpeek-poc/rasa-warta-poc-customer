@@ -1,0 +1,272 @@
+version: "2.0"
+
+stories:
+# Assistance flow
+- story: assistance request
+  steps:
+  - intent: assistance_request
+  - action: utter_assistance_transfer
+
+# Claim flow
+- story: claim report with assistance
+  steps:
+  - intent: claim_report
+  - action: utter_give_assistance
+  - intent: affirm
+  - action: utter_assistance_transfer
+
+- story: claim report without customer info
+  steps:
+  - intent: claim_report
+  - action: utter_give_assistance
+  - intent: deny
+  - action: customer_info_form
+  - active_loop: customer_info_form
+  - active_loop: null
+  - slot_was_set:
+    - customer_phone_number_confirmed: false
+  - action: utter_claim_transfer
+
+- story: claim report without claim subject
+  steps:
+  - intent: connected
+  - action: utter_greet
+  - intent: claim_report
+  - action: utter_give_assistance
+  - intent: deny
+  - action: customer_info_form
+  - active_loop: customer_info_form
+  - active_loop: null
+  - slot_was_set:
+    - customer_phone_number_confirmed: true
+  - action: action_set_subject_type
+  - slot_was_set:
+    - subject_type: null
+  - action: utter_describe_incident
+  - intent: claim_report
+  - slot_was_set:
+    - subject_type: null
+  - action: utter_claim_transfer
+
+- story: claim report with claim subject - path 1
+  steps:
+  - intent: connected
+  - action: utter_greet
+  - intent: claim_report
+  - action: utter_give_assistance
+  - intent: deny
+  - action: customer_info_form
+  - active_loop: customer_info_form
+  - active_loop: null
+  - slot_was_set:
+    - customer_phone_number_confirmed: true
+  - action: action_set_subject_type
+  - slot_was_set:
+    - subject_type: null
+  - action: utter_describe_incident
+  - intent: claim_report
+  - slot_was_set:
+    - subject_type: "any"
+  - action: action_init_claim_report
+  - action: claim_report_form
+  - active_loop: claim_report_form
+  - active_loop: null
+  - action: utter_claim_transfer
+
+- story: claim report with claim subject - path 2
+  steps:
+  - intent: connected
+  - action: utter_greet
+  - intent: claim_report
+  - action: utter_give_assistance
+  - intent: deny
+  - action: customer_info_form
+  - active_loop: customer_info_form
+  - active_loop: null
+  - slot_was_set:
+    - customer_phone_number_confirmed: true
+  - action: action_set_subject_type
+  - slot_was_set:
+    - subject_type: "any"
+  - action: action_init_claim_report
+  - action: claim_report_form
+  - active_loop: claim_report_form
+  - active_loop: null
+  - action: utter_claim_transfer
+
+# Status flow
+- story: status without incident number
+  steps:
+  - or:
+    - intent: claim_status
+    - intent: claim_status_consultant_direct
+    - intent: claim_status_manager_message
+    - intent: claim_status_bot_info_inspection
+    - intent: claim_status_bot_info_documents
+    - intent: claim_status_bot_info_withdrawal
+  - action: action_set_status_path
+  - action: incident_number_form
+  - active_loop: incident_number_form
+  - active_loop: null
+  - slot_was_set:
+    - incident_number_verified: false
+  - action: utter_status_transfer
+
+- story: status without clarifying
+  steps:
+  - or:
+    - intent: claim_status
+    - intent: claim_status_consultant_direct
+    - intent: claim_status_manager_message
+    - intent: claim_status_bot_info_inspection
+    - intent: claim_status_bot_info_documents
+    - intent: claim_status_bot_info_withdrawal
+  - action: action_set_status_path
+  - action: incident_number_form
+  - active_loop: incident_number_form
+  - active_loop: null
+  - slot_was_set:
+    - incident_number_verified: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path_flag: true
+  - action: customer_authentication_form
+  - active_loop: customer_authentication_form
+  - active_loop: null
+  - action: action_perform_customer_authentication
+  - checkpoint: status_customer_authentication
+
+- story: status with clarifying
+  steps:
+  - or:
+    - intent: claim_status
+    - intent: claim_status_consultant_direct
+    - intent: claim_status_manager_message
+    - intent: claim_status_bot_info_inspection
+    - intent: claim_status_bot_info_documents
+    - intent: claim_status_bot_info_withdrawal
+  - action: action_set_status_path
+  - action: incident_number_form
+  - active_loop: incident_number_form
+  - active_loop: null
+  - slot_was_set:
+    - incident_number_verified: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path_flag: false
+  - action: utter_clarify_question
+  - or:
+    - intent: claim_status
+    - intent: claim_status_consultant_direct
+    - intent: claim_status_manager_message
+    - intent: claim_status_bot_info_inspection
+    - intent: claim_status_bot_info_documents
+    - intent: claim_status_bot_info_withdrawal
+  - action: action_set_status_path
+  - action: customer_authentication_form
+  - active_loop: customer_authentication_form
+  - active_loop: null
+  - action: action_perform_customer_authentication
+  - checkpoint: status_customer_authentication
+
+- story: status authentication failed
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: false
+  - action: utter_status_transfer
+
+- story: status authentication succeed - consultant direct
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path: "consultant_direct"
+  - action: utter_status_transfer
+
+- story: status authentication succeed - manager message
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path: "manager_message"
+  - action: utter_status_message
+
+- story: status authentication succeed - bot info inspection
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path: "bot_info_inspection"
+  - action: action_select_utter_status_bot_info
+
+- story: status authentication succeed - bot info documents
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path: "bot_info_documents"
+  - action: action_select_utter_status_bot_info
+
+- story: status authentication succeed - bot info withdrawal
+  steps:
+  - checkpoint: status_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_status_path
+  - slot_was_set:
+    - status_path: "bot_info_withdrawal"
+  - action: action_select_utter_status_bot_info
+
+
+# Customer question flow
+- story: question general
+  steps:
+  - intent: customer_question_general
+  - action: utter_customer_question_transfer
+
+- story: insurance question without insurance number
+  steps:
+  - action: insurance_number_form
+  - active_loop: insurance_number_form
+  - active_loop: null
+  - slot_was_set:
+    - insurance_number_verified: false
+  - action: utter_customer_question_transfer
+
+- story: insurance question with insurance number
+  steps:
+  - action: insurance_number_form
+  - active_loop: insurance_number_form
+  - active_loop: null
+  - slot_was_set:
+    - insurance_number_verified: true
+  - action: customer_authentication_form
+  - active_loop: customer_authentication_form
+  - active_loop: null
+  - action: action_perform_customer_authentication
+  - checkpoint: customer_question_customer_authentication
+
+- story: status authentication failed
+  steps:
+  - checkpoint: customer_question_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: false
+  - action: utter_customer_question_transfer
+
+- story: status authentication succeed - consultant direct
+  steps:
+  - checkpoint: customer_question_customer_authentication
+  - slot_was_set:
+    - customer_authenticated: true
+  - action: action_set_customer_question_path
+  - action: action_select_utter_customer_question_bot_info
+
