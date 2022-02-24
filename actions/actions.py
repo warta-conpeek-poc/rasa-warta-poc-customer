@@ -44,7 +44,6 @@ class ActionSessionStart(Action):
         return "action_session_start"
 
     async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
-
         logging.critical("Session started !!!")
         events = [SessionStarted(), ActionExecuted("action_listen")]
         metadata = tracker.get_slot("session_started_metadata")
@@ -54,29 +53,10 @@ class ActionSessionStart(Action):
             match = re.match("^\d+$", caller_contact_address)
             if match:
                 events.append(SlotSet("customer_phone_number", caller_contact_address))
-                # events.append(SlotSet("customer_phone_number", "501003003"))
         if metadata and "callee_contact_address" in metadata:
             events.append(SlotSet("service_phone_number", metadata["callee_contact_address"]))
         events.append(SlotSet("validate_counter", 0))
         return events
-
-class ActionAllSlotsReset(Action):
-
-    def name(self) -> Text:
-        return "action_all_slots_reset"
-
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Wszystkie dane zostały zresetowane.")
-        return [AllSlotsReset()]
-
-class ActionRestarted(Action):
-
-    def name(self) -> Text:
-        return "action_restarted"
-
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Konwersacja została zrestartowana.")
-        return [Restarted()]
 
 class ActionLowConfidence(Action):
 
@@ -91,18 +71,16 @@ class ActionLowConfidence(Action):
             utter_list.append("")
         else:
             utter_list.append("Czy możesz powtórzyć?")
-        text_message = random.choice(utter_list)
-        custom_message = {
-            "blocks": [
-                {
-                    "text": text_message,
-                }
-            ]
+        text = random.choice(utter_list)
+        bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
+        custom = {
+            "blocks": bot_event["data"]["custom"]["blocks"]
         }
-        if tracker.get_latest_input_channel() == "conpeek-voice":
-            dispatcher.utter_message(json_message=custom_message)
+        custom["blocks"][0]["text"] = text
+        if tracker.get_latest_input_channel() in ("conpeek-voice", "conpeek-text"):
+            dispatcher.utter_message(json_message=custom)
         else:
-            dispatcher.utter_message(text=text_message)
+            dispatcher.utter_message(text=text)
         return [UserUtteranceReverted()]
 
 class ActionOutOfScope(Action):
@@ -120,13 +98,13 @@ class ActionOutOfScope(Action):
             text += bot_event["data"]["custom"]["blocks"][0]["text"]
             custom = {
                 "out_of_scope": True,
-                "blocks": [
-                    {
-                        "text": text,
-                    }
-                ]
+                "blocks": bot_event["data"]["custom"]["blocks"]
             }
-        dispatcher.utter_message(json_message=custom)
+            custom["blocks"][0]["text"] = text
+        if tracker.get_latest_input_channel() in ("conpeek-voice", "conpeek-text"):
+            dispatcher.utter_message(json_message=custom)
+        else:
+            dispatcher.utter_message(text=text)
         return [UserUtteranceReverted()]
 
 class ValidateCustomerInfoForm(FormValidationAction):
@@ -217,7 +195,7 @@ class ValidateClaimReportForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_claim_report_form"
 
-    def validate_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
@@ -225,54 +203,55 @@ class ValidateClaimReportForm(FormValidationAction):
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
-        insurance_number = ""
+        given_insurance_number = ""
         for word in words:
             if word.isdigit():
-                insurance_number += word
-        match =re.match("^9\d{11}$", insurance_number)
+                given_insurance_number += word
+        match =re.match("^9\d{11}$", given_insurance_number)
         if match:
             slots = {
-                "insurance_number": insurance_number,
+                "given_insurance_number": given_insurance_number,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "insurance_number": slot_value,
+                    "given_insurance_number": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "insurance_number": None,
+                    "given_insurance_number": None,
                     "validate_counter": validate_counter
                 }
         return slots
 
-    def validate_insurance_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        if slot_value in ["internal", "external"]:
+        given_subject_type = slot_value
+        if given_subject_type in ["internal", "external"]:
             slots = {
-                "insurance_type": slot_value,
+                "given_subject_type": given_subject_type,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "insurance_type": slot_value,
+                    "given_subject_type": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "insurance_type": None,
+                    "given_subject_type": None,
                     "validate_counter": validate_counter
                 }
         return slots
 
-    def validate_vehicle_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_vehicle_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
@@ -280,27 +259,27 @@ class ValidateClaimReportForm(FormValidationAction):
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
-        vehicle_number = ""
+        given_vehicle_number = ""
         for word in words:
             if word.isdigit():
-                vehicle_number += word
+                given_vehicle_number += word
             else:
-                vehicle_number += word[0].upper()
-        match =re.match("^[A-Z0-9]*$", vehicle_number)
+                given_vehicle_number += word[0].upper()
+        match =re.match("^[A-Z0-9]*$", given_vehicle_number)
         if match:
             slots = {
-                "insurance_number": vehicle_number,
+                "given_vehicle_number": given_vehicle_number,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "insurance_number": slot_value,
+                    "given_vehicle_number": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "insurance_number": None,
+                    "given_vehicle_number": None,
                     "validate_counter": validate_counter
                 }
         return slots
@@ -309,7 +288,7 @@ class ValidateIncidentNumberForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_incident_number_form"
 
-    def validate_incident_number_verified(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_incident_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
@@ -317,43 +296,43 @@ class ValidateIncidentNumberForm(FormValidationAction):
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
-        incident_number = words[0][0]
+        given_incident_number = words[0][0]
         for word in words:
             if word.isdigit():
-                incident_number += word
-        # prog = re.compile("^[wh]\d{12}(?:-\d{2})*$", re.IGNORECASE)
-        match1 =re.match("^[wh]\d{12}$", incident_number, re.IGNORECASE)
-        match2 =re.match("^[wh]\d{14}$", incident_number, re.IGNORECASE)
+                given_incident_number += word
+        match1 =re.match("^[wh]\d{12}$", given_incident_number, re.IGNORECASE)
+        match2 =re.match("^[wh]\d{14}$", given_incident_number, re.IGNORECASE)
         match = False
         if match1:
             match = True
         elif match2:
             match = True
-            incident_number = incident_number[:13] + "-" + incident_number[-2:]
-        logging.critical(f"Got incident number: {incident_number} with matching result: {match}")
-        if match and incident_number in baza_szkody_dict:
-            logging.critical(f"Incident {incident_number} found in database.")
+            given_incident_number = given_incident_number[:13] + "-" + given_incident_number[-2:]
+        logging.critical(f"Got incident number: {given_incident_number} with matching result: {match}")
+        if match and given_incident_number in baza_szkody_dict:
+            logging.critical(f"Incident {given_incident_number} found in database.")
             incident_missing_documents_list = None
             incident_documents_submission_date = None
             incident_inspection_date = None
             incident_withdrawal_amount = None
-            if baza_szkody_dict[incident_number]["Czy brakuje dokumentów"] == "Tak":
-                incident_missing_documents_list = baza_szkody_dict[incident_number]["Jakich dokumentów brakuje"]
-            if baza_szkody_dict[incident_number]["Wpływ dokumentów ostatnich (data)"]:
-                incident_documents_submission_date = baza_szkody_dict[incident_number]["Wpływ dokumentów ostatnich (data)"]
-            if baza_szkody_dict[incident_number]["Czy zostały zlecone oględziny"] == "Tak":
-                incident_inspection_date = baza_szkody_dict[incident_number]["data oględzin"]
-            if baza_szkody_dict[incident_number]["Kwota wypłaty"] and int(baza_szkody_dict[incident_number]["Kwota wypłaty"]) > 0:
-                incident_withdrawal_amount = baza_szkody_dict[incident_number]["Kwota wypłaty"]
-            incident_agent_email = baza_szkody_dict[incident_number]["Email opiekuna"]
+            if baza_szkody_dict[given_incident_number]["Czy brakuje dokumentów"] == "Tak":
+                incident_missing_documents_list = baza_szkody_dict[given_incident_number]["Jakich dokumentów brakuje"]
+            if baza_szkody_dict[given_incident_number]["Wpływ dokumentów ostatnich (data)"]:
+                incident_documents_submission_date = baza_szkody_dict[given_incident_number]["Wpływ dokumentów ostatnich (data)"]
+            if baza_szkody_dict[given_incident_number]["Czy zostały zlecone oględziny"] == "Tak":
+                incident_inspection_date = baza_szkody_dict[given_incident_number]["data oględzin"]
+            if baza_szkody_dict[given_incident_number]["Kwota wypłaty"] and int(baza_szkody_dict[given_incident_number]["Kwota wypłaty"]) > 0:
+                incident_withdrawal_amount = baza_szkody_dict[given_incident_number]["Kwota wypłaty"]
+            system_agent_email = baza_szkody_dict[given_incident_number]["Email opiekuna"]
             slots = {
-                "incident_number": incident_number,
+                "given_incident_number": given_incident_number,
+                "system_incident_number": given_incident_number,
                 "incident_number_verified": True,
                 "incident_missing_documents_list": incident_missing_documents_list,
                 "incident_documents_submission_date": incident_documents_submission_date,
                 "incident_inspection_date": incident_inspection_date,
                 "incident_withdrawal_amount": incident_withdrawal_amount,
-                "incident_agent_email": incident_agent_email,
+                "system_agent_email": system_agent_email,
                 "validate_counter": 0
             }
             logging.critical("Setting slots:")
@@ -361,14 +340,14 @@ class ValidateIncidentNumberForm(FormValidationAction):
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "incident_number": slot_value,
+                    "given_incident_number": slot_value,
                     "incident_number_verified": False,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "incident_number": slot_value,
-                    "incident_number_verified": None,
+                    "given_incident_number": None,
+                    "incident_number_verified": False,
                     "validate_counter": validate_counter
                 }
         return slots
@@ -377,7 +356,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_insurance_number_form"
 
-    def validate_insurance_number_verified(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
@@ -385,46 +364,47 @@ class ValidateInsuranceNumberForm(FormValidationAction):
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
-        insurance_number = ""
+        given_insurance_number = ""
         for word in words:
             if word.isdigit():
-                insurance_number += word
-        match =re.match("^9\d{11}$", insurance_number)
-        logging.critical(f"Got insurance number: {insurance_number} with matching result: {match}")
-        if match and insurance_number in baza_polisy_dict:
-            logging.critical(f"Incident {insurance_number} found in database.")
+                given_insurance_number += word
+        match =re.match("^9\d{11}$", given_insurance_number)
+        logging.critical(f"Got insurance number: {given_insurance_number} with matching result: {match}")
+        if match and given_insurance_number in baza_polisy_dict:
+            logging.critical(f"Incident {given_insurance_number} found in database.")
             next_installment_number = None
             next_installment_amount = None
             next_installment_date = None
-            insurance_payment_2_amount = baza_polisy_dict[insurance_number]["Kwota płatności 2"]
-            insurance_payment_2_date = baza_polisy_dict[insurance_number]["Termin płatności 2"]
-            if baza_polisy_dict[insurance_number]["Czy opłacona 2?"] == "TAK":
+            insurance_payment_2_amount = baza_polisy_dict[given_insurance_number]["Kwota płatności 2"]
+            insurance_payment_2_date = baza_polisy_dict[given_insurance_number]["Termin płatności 2"]
+            if baza_polisy_dict[given_insurance_number]["Czy opłacona 2?"] == "TAK":
                 insurance_payment_2_done = True
             else:
                 insurance_payment_2_done = False
                 next_installment_number = 2
                 next_installment_amount = insurance_payment_2_amount
                 next_installment_date = insurance_payment_2_date
-            insurance_payment_1_amount = baza_polisy_dict[insurance_number]["Kwota płatności 1"]
-            insurance_payment_1_date = baza_polisy_dict[insurance_number]["Termin płatności 1"]
-            if baza_polisy_dict[insurance_number]["Czy opłacona 1?"] == "TAK":
+            insurance_payment_1_amount = baza_polisy_dict[given_insurance_number]["Kwota płatności 1"]
+            insurance_payment_1_date = baza_polisy_dict[given_insurance_number]["Termin płatności 1"]
+            if baza_polisy_dict[given_insurance_number]["Czy opłacona 1?"] == "TAK":
                 insurance_payment_1_done = True
             else:
                 insurance_payment_1_done = False
                 next_installment_number = 1
                 next_installment_amount = insurance_payment_1_amount
                 next_installment_date = insurance_payment_1_date
-            insurance_active = baza_polisy_dict[insurance_number]["Polisa aktywna"]
-            insurance_end_date = baza_polisy_dict[insurance_number]["Data zakończenia"]
-            insurance_subject_type = baza_polisy_dict[insurance_number]["Przedmiot ubezpieczenia"]
-            insurance_customer_pesel = baza_polisy_dict[insurance_number]["Pesel ubezpieczonego"]
-            insurance_customer_name = baza_polisy_dict[insurance_number]["Imię i nazwisko ubezpieczonego"]
+            insurance_active = baza_polisy_dict[given_insurance_number]["Polisa aktywna"]
+            insurance_end_date = baza_polisy_dict[given_insurance_number]["Data zakończenia"]
+            system_subject_type = baza_polisy_dict[given_insurance_number]["Przedmiot ubezpieczenia"]
+            system_customer_pesel = baza_polisy_dict[given_insurance_number]["Pesel ubezpieczonego"]
+            system_customer_name = baza_polisy_dict[given_insurance_number]["Imię i nazwisko ubezpieczonego"]
             slots = {
-                "insurance_number": insurance_number,
+                "given_insurance_number": given_insurance_number.upper(),
+                "system_insurance_number": given_insurance_number.upper(),
                 "insurance_number_verified": True,
-                "insurance_subject_type": insurance_subject_type,
-                "insurance_customer_pesel": insurance_customer_pesel,
-                "insurance_customer_name": insurance_customer_name,
+                "system_subject_type": system_subject_type,
+                "system_customer_pesel": system_customer_pesel,
+                "system_customer_name": system_customer_name,
                 "insurance_payment_1_amount": insurance_payment_1_amount,
                 "insurance_payment_1_done": insurance_payment_1_done,
                 "insurance_payment_1_date": insurance_payment_1_date,
@@ -443,38 +423,37 @@ class ValidateInsuranceNumberForm(FormValidationAction):
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "insurance_number": slot_value,
+                    "given_insurance_number": slot_value,
                     "insurance_number_verified": False,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "insurance_number": slot_value,
-                    "insurance_number_verified": None,
+                    "given_insurance_number": None,
+                    "insurance_number_verified": False,
                     "validate_counter": validate_counter
                 }
         return slots
-
 
 class ValidateCustomerAuthenticationForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_customer_authentication_form"
 
-    async def extract_subject_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
+    async def extract_given_subject_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
         logging.critical("Y"*10)
-        subject_type = tracker.get_slot("subject_type")
-        if subject_type:
-            logging.critical(f"Slot subject_type exists with value {subject_type}")
-        if not subject_type:
+        given_subject_type = tracker.get_slot("given_subject_type")
+        if given_subject_type:
+            logging.critical(f"Slot given_subject_type exists with value {given_subject_type}")
+        else:
             for entity in tracker.latest_message['entities']:
                 entity_name = entity["entity"]
-                if entity_name == "subject_type":
+                if entity_name == "given_subject_type":
                     entity_value = entity["value"]
                     logging.critical(f"Found entity {entity_name} with value {entity_value}")
-                    subject_type = entity_value
-        return {"subject_type": subject_type}
+                    given_subject_type = entity_value
+                    return {"given_subject_type": given_subject_type}
 
-    def validate_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         logging.critical("X"*10)
         logging.critical(slot_value)
         if not slot_value:
@@ -482,92 +461,94 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        if slot_value in ["PERSONAL", "MOTOR", "PROPERTY"]:
+        given_subject_type = slot_value
+        if given_subject_type in ["PERSONAL", "MOTOR", "PROPERTY"]:
             slots = {
-                "subject_type": slot_value,
+                "given_subject_type": given_subject_type,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "subject_type": slot_value,
+                    "given_subject_type": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "subject_type": None,
+                    "given_subject_type": None,
                     "validate_counter": validate_counter
                 }
         logging.critical(slots)
         return slots
 
-    def validate_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
         words = slot_value.split()
+        given_customer_name = slot_value.title()
         if len(words) == 2:
             slots = {
-                "customer_name": slot_value.title(),
+                "given_customer_name": given_customer_name,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "customer_name": slot_value,
+                    "given_customer_name": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "customer_name": None,
+                    "given_customer_name": None,
                     "validate_counter": validate_counter
                 }
         return slots
 
-    def validate_customer_pesel(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_customer_pesel(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        customer_pesel = ""
+        given_customer_pesel = ""
         words = slot_value.split()
         for word in words:
             if word.isdigit():
-                customer_pesel += word
+                given_customer_pesel += word
         prog = re.compile('^\d{11}$', re.IGNORECASE)
-        match = prog.match(customer_pesel)
-        logging.critical(f"Got customer pesel: {customer_pesel} from slot_value: {slot_value} with matching result: {match}")
+        match = prog.match(given_customer_pesel)
+        logging.critical(f"Got customer pesel: {given_customer_pesel} from slot_value: {slot_value} with matching result: {match}")
         if match :
             slots = {
-                "customer_pesel": customer_pesel,
+                "given_customer_pesel": given_customer_pesel,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "customer_pesel": slot_value,
+                    "given_customer_pesel": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "customer_pesel": None,
+                    "given_customer_pesel": None,
                     "validate_counter": validate_counter
                 }
         logging.critical(slots)
         return slots
 
-class ActionSetSubjectType(Action):
+class ActionSetGivenSubjectType(Action):
 
     def name(self) -> Text:
-        return "action_set_subject_type"
+        return "action_set_given_subject_type"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        subject_type = tracker.get_slot("subject_type")
-        events.append(SlotSet("subject_type", subject_type))
+        given_subject_type = tracker.get_slot("given_subject_type")
+        events.append(SlotSet("given_subject_type", given_subject_type))
         return events
 
 class ActionInitClaimReport(Action):
@@ -577,8 +558,8 @@ class ActionInitClaimReport(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        subject_type = tracker.get_slot("subject_type")
-        if subject_type != "MOTOR":
+        given_subject_type = tracker.get_slot("given_subject_type")
+        if given_subject_type != "MOTOR":
             events.append(SlotSet("vehicle_number", "-"))
         return events
 
@@ -705,30 +686,30 @@ class ActionPerformCustomerAuthentication(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        insurance_subject_type = tracker.get_slot("insurance_subject_type")
-        insurance_customer_name = tracker.get_slot("insurance_customer_name")
-        insurance_customer_pesel = tracker.get_slot("insurance_customer_pesel")
-        subject_type = tracker.get_slot("subject_type")
-        customer_name = tracker.get_slot("customer_name")
-        customer_pesel = tracker.get_slot("customer_pesel")
+        system_subject_type = tracker.get_slot("system_subject_type")
+        system_customer_name = tracker.get_slot("system_customer_name")
+        system_customer_pesel = tracker.get_slot("system_customer_pesel")
+        given_subject_type = tracker.get_slot("given_subject_type")
+        given_customer_name = tracker.get_slot("given_customer_name")
+        given_customer_pesel = tracker.get_slot("given_customer_pesel")
 
         auth_level = 0
 
         # Compare customer name
-        logging.critical(f"insurance_customer_name: {insurance_customer_name}, customer_name: {customer_name}")
-        insurance_customer_name_set = set(insurance_customer_name.split(' '))
-        customer_name_set = set(customer_name.split(' '))
-        if insurance_customer_name_set == customer_name_set:
+        logging.critical(f"system_customer_name: {system_customer_name}, given_customer_name: {given_customer_name}")
+        system_customer_name_set = set(system_customer_name.split(' '))
+        given_customer_name_set = set(given_customer_name.split(' '))
+        if system_customer_name_set == given_customer_name_set:
             auth_level += 1
 
         # Compare subject type
-        logging.critical(f"insurance_subject_type: {insurance_subject_type}, subject_type: {subject_type}")
-        if insurance_subject_type == subject_type:
+        logging.critical(f"system_subject_type: {system_subject_type}, given_subject_type: {given_subject_type}")
+        if system_subject_type == given_subject_type:
             auth_level += 1
 
         # Compare customer pesel
-        logging.critical(f"insurance_customer_pesel: {insurance_customer_pesel}, customer_pesel: {customer_pesel}")
-        if insurance_customer_pesel == customer_pesel:
+        logging.critical(f"system_customer_pesel: {system_customer_pesel}, given_customer_pesel: {given_customer_pesel}")
+        if system_customer_pesel == given_customer_pesel:
             auth_level += 1
 
         if auth_level > 1:

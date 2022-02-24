@@ -30,7 +30,3 @@ rules:
   - action: action_set_customer_question_path
   - action: insurance_number_form
   - active_loop: insurance_number_form
-
-
-#  wait_for_user_input: false
-
