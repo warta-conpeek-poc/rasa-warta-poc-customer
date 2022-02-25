@@ -268,5 +268,5 @@ stories:
   - slot_was_set:
     - customer_authenticated: true
   - action: action_set_customer_question_path
-  - action: action_select_utter_customer_question_bot_info
+  - action: action_select_utter_customer_question
 

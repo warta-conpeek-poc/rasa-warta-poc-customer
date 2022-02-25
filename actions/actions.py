@@ -310,6 +310,11 @@ class ValidateIncidentNumberForm(FormValidationAction):
             given_incident_number = given_incident_number[:13] + "-" + given_incident_number[-2:]
         logging.critical(f"Got incident number: {given_incident_number} with matching result: {match}")
         if match and given_incident_number in baza_szkody_dict:
+            subject_type_map = {
+                'Pojazd': 'MOTOR',
+                'Nieruchomość': 'PROPERTY',
+                'Szkoda osobowa': 'PERSONAL'
+            }
             logging.critical(f"Incident {given_incident_number} found in database.")
             incident_missing_documents_list = None
             incident_documents_submission_date = None
@@ -324,15 +329,23 @@ class ValidateIncidentNumberForm(FormValidationAction):
             if baza_szkody_dict[given_incident_number]["Kwota wypłaty"] and int(baza_szkody_dict[given_incident_number]["Kwota wypłaty"]) > 0:
                 incident_withdrawal_amount = baza_szkody_dict[given_incident_number]["Kwota wypłaty"]
             system_agent_email = baza_szkody_dict[given_incident_number]["Email opiekuna"]
+            system_insurance_number = baza_szkody_dict[given_incident_number]["Nr polisy"]
+            system_subject_type = subject_type_map[baza_szkody_dict[given_incident_number]["Rodzaj przedmiotu"]]
+            system_customer_name = baza_szkody_dict[given_incident_number]["Imię i nazwisko poszkodowanego"]
+            system_customer_pesel = baza_szkody_dict[given_incident_number]["Pesel poszkodowanego"]
             slots = {
                 "given_incident_number": given_incident_number,
                 "system_incident_number": given_incident_number,
+                "system_insurance_number": system_insurance_number,
+                "system_subject_type": system_subject_type,
+                "system_customer_name": system_customer_name,
+                "system_customer_pesel": system_customer_pesel,
+                "system_agent_email": system_agent_email,
                 "incident_number_verified": True,
                 "incident_missing_documents_list": incident_missing_documents_list,
                 "incident_documents_submission_date": incident_documents_submission_date,
                 "incident_inspection_date": incident_inspection_date,
                 "incident_withdrawal_amount": incident_withdrawal_amount,
-                "system_agent_email": system_agent_email,
                 "validate_counter": 0
             }
             logging.critical("Setting slots:")
@@ -563,35 +576,49 @@ class ActionInitClaimReport(Action):
             events.append(SlotSet("vehicle_number", "-"))
         return events
 
-class ActionSetStatusPath(Action):
+class ActionSetIncidentStatusPath(Action):
 
     def name(self) -> Text:
-        return "action_set_status_path"
+        return "action_set_incident_status_path"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        status_path = tracker.get_slot("status_path")
-        status_path_flag = True
-        if not status_path:
+        incident_status_path = tracker.get_slot("incident_status_path")
+        incident_status_path_flag = True
+        if not incident_status_path:
             latest_intent = tracker.get_intent_of_latest_message()
             logging.critical(f"Intent for status path: {latest_intent}")
-            if latest_intent == "claim_status_consultant_direct":
-                status_path = "consultant_direct"
-            elif latest_intent == "claim_status_manager_message":
-                status_path = "manager_message"
-            elif latest_intent == "claim_status_bot_info_inspection":
-                status_path = "bot_info_inspection"
-            elif latest_intent == "claim_status_bot_info_withdrawal":
-                status_path = "bot_info_withdrawal"
-            elif latest_intent == "claim_status_bot_info_documents":
-                status_path = "bot_info_documents"
+            if latest_intent == "incident_status_consultant_direct":
+                incident_status_path = "consultant_direct"
+            elif latest_intent == "incident_status_manager_message":
+                incident_status_path = "manager_message"
+            elif latest_intent == "incident_status_bot_info_inspection":
+                incident_status_path = "bot_info_inspection"
+            elif latest_intent == "incident_status_bot_info_withdrawal":
+                incident_status_path = "bot_info_withdrawal"
+            elif latest_intent == "incident_status_bot_info_documents":
+                incident_status_path = "bot_info_documents"
             else:
-                status_path = None
-                status_path_flag = False
+                incident_status_path = None
+                incident_status_path_flag = False
                 logging.critical("No status path !!!")
-        logging.critical(f"Setting slot status_path to {status_path}")
-        events.append(SlotSet("status_path", status_path))
-        events.append(SlotSet("status_path_flag", status_path_flag))
+        logging.critical(f"Setting slot incident_status_path to {incident_status_path}")
+        events.append(SlotSet("incident_status_path", incident_status_path))
+        return events
+
+class ActionSetIncidentStatusPathFlag(Action):
+
+    def name(self) -> Text:
+        return "action_set_incident_status_path_flag"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        events = []
+        incident_status_path = tracker.get_slot("incident_status_path")
+        incident_status_path_flag = False
+        if incident_status_path:
+            incident_status_path_flag = True
+        logging.critical(f"Setting slot incident_status_path_flag to {incident_status_path_flag}")
+        events.append(SlotSet("incident_status_path_flag", incident_status_path_flag))
         return events
 
 class ActionSetCustomerQuestionPath(Action):
@@ -617,47 +644,51 @@ class ActionSetCustomerQuestionPath(Action):
         return events
 
 
-class ActionSelectUtterStatusBotInfo(Action):
+class ActionSelectUtterIncidentStatus(Action):
 
     def name(self) -> Text:
-        return "action_select_utter_status_bot_info"
+        return "action_select_utter_incident_status"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        status_path = tracker.get_slot("status_path")
-        if status_path == "bot_info_inspection":
+        incident_status_path = tracker.get_slot("incident_status_path")
+        if incident_status_path == "bot_info_inspection":
             incident_inspection_date = tracker.get_slot("incident_inspection_date")
             if incident_inspection_date:
-                events.append(FollowupAction("utter_status_inspection"))
+                events.append(FollowupAction("utter_incident_status_inspection"))
             else:
-                events.append(FollowupAction("utter_status_no_inspection"))
-        elif status_path == "bot_info_withdrawal":
+                events.append(FollowupAction("utter_incident_status_no_inspection"))
+        elif incident_status_path == "bot_info_withdrawal":
             incident_withdrawal_amount = tracker.get_slot("incident_withdrawal_amount")
             if incident_withdrawal_amount:
-                events.append(FollowupAction("utter_status_withdrawal"))
+                events.append(FollowupAction("utter_incident_status_withdrawal"))
             else:
-                events.append(FollowupAction("utter_status_no_withdrawal"))
-        elif status_path == "bot_info_documents":
+                events.append(FollowupAction("utter_incident_status_no_withdrawal"))
+        elif incident_status_path == "bot_info_documents":
             incident_documents_submission_date = tracker.get_slot("incident_documents_submission_date")
             incident_missing_documents_list = tracker.get_slot("incident_missing_documents_list")
             if incident_documents_submission_date:
                 if incident_missing_documents_list:
-                    events.append(FollowupAction("utter_status_date_list"))
+                    events.append(FollowupAction("utter_incident_status_date_list"))
                 else:
-                    events.append(FollowupAction("utter_status_date_no_list"))
+                    events.append(FollowupAction("utter_incident_status_date_no_list"))
             else:
                 if incident_missing_documents_list:
-                    events.append(FollowupAction("utter_status_no_date_list"))
+                    events.append(FollowupAction("utter_incident_status_no_date_list"))
                 else:
-                    events.append(FollowupAction("utter_status_no_date_no_list"))
+                    events.append(FollowupAction("utter_incident_status_no_date_no_list"))
+        elif incident_status_path == "consultant_direct":
+            events.append(FollowupAction("utter_incident_status_transfer"))
+        elif incident_status_path == "manager_message":
+            events.append(FollowupAction("utter_incident_status_message"))
         else:
             events.append(FollowupAction("utter_error"))
         return events
 
-class ActionSelectUtterCustomerQuestionBotInfo(Action):
+class ActionSelectUtterCustomerQuestion(Action):
 
     def name(self) -> Text:
-        return "action_select_utter_customer_question_bot_info"
+        return "action_select_utter_customer_question"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []

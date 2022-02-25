@@ -26,9 +26,9 @@ pipeline:
 policies:
   - name: AugmentedMemoizationPolicy
     constrain_similarities: True
-    max_history: 5
+    max_history: 8
   - name: TEDPolicy
     constrain_similarities: True
-    max_history: 5
+    max_history: 10
     epochs: 100
   - name: RulePolicy

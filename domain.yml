@@ -14,19 +14,19 @@ intents:
   - deny
   - assistance_request
   - claim_report
-  - claim_status_bot
-  - claim_status_consultant
-  - agent_insurance_info
-  - customer_insurance_info
+  - incident_status
+  - incident_status_consultant_direct
+  - incident_status_manager_message
+  - incident_status_bot_info_inspection
+  - incident_status_bot_info_documents
+  - incident_status_bot_info_withdrawal
   - customer_question_general
   - customer_question_payments
   - customer_question_validity
 
 entities:
-  - phone_number
-  - customer_name
   - time
-  - subject_type
+  - given_subject_type
 
 slots:
   customer_authenticated:
@@ -95,6 +95,12 @@ slots:
   incident_number_verified:
     type: bool
     influence_conversation: true
+  incident_status_path:
+    type: any
+    influence_conversation: false
+  incident_status_path_flag:
+    type: bool
+    influence_conversation: true
   incident_time:
     type: any
     influence_conversation: false
@@ -140,18 +146,6 @@ slots:
   service_phone_number:
     type: any
     influence_conversation: false
-  status_path:
-    type: categorical
-    values:
-      - consultant_direct
-      - manager_message
-      - bot_info_inspection
-      - bot_info_withdrawal
-      - bot_info_documents
-    influence_conversation: true
-  status_path_flag:
-    type: bool
-    influence_conversation: true
   validate_counter:
     type: any
     influence_conversation: false
@@ -161,10 +155,11 @@ actions:
   - action_low_confidence
   - action_set_given_subject_type
   - action_init_claim_report
-  - action_set_status_path
+  - action_set_incident_status_path
+  - action_set_incident_status_path_flag
   - action_set_customer_question_path
-  - action_select_utter_status_bot_info
-  - action_select_utter_customer_question_bot_info
+  - action_select_utter_incident_status
+  - action_select_utter_customer_question
   - action_perform_customer_authentication
   - action_out_of_scope
   - validate_customer_info_form
@@ -269,7 +264,7 @@ responses:
     - text: ''
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_transfer:
+  utter_incident_status_transfer:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -347,7 +342,7 @@ responses:
     - text: 'Twoja polisa jest nieaktywna. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_inspection:
+  utter_incident_status_inspection:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -357,7 +352,7 @@ responses:
     - text: 'Oględziny zostały zaplanowane na dzień {incident_inspection_date}. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_no_inspection:
+  utter_incident_status_no_inspection:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -366,7 +361,7 @@ responses:
     - text: 'Nie została określona data oględzin. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_withdrawal:
+  utter_incident_status_withdrawal:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -375,7 +370,7 @@ responses:
     - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_no_withdrawal:
+  utter_incident_status_no_withdrawal:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -384,7 +379,7 @@ responses:
     - text: 'Szkoda nie zostałą oszacowana. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_date_list:
+  utter_incident_status_date_list:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -394,7 +389,7 @@ responses:
     - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_date_no_list:
+  utter_incident_status_date_no_list:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -404,7 +399,7 @@ responses:
     - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_no_date_list:
+  utter_incident_status_no_date_list:
   - channel: conpeek-voice
     custom:
       blocks:
@@ -413,7 +408,7 @@ responses:
   - text: 'Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_no_date_no_list:
+  utter_incident_status_no_date_no_list:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -422,7 +417,7 @@ responses:
     - text: 'Nie odnotowaliśmy wpłynięcia żadnych dokumentów. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_status_message:
+  utter_incident_status_message:
     - channel: conpeek-voice
       custom:
         blocks:
