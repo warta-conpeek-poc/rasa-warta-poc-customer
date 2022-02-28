@@ -111,7 +111,7 @@ class ValidateCustomerInfoForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_customer_info_form"
 
-    def validate_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    def validate_given_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
@@ -120,18 +120,18 @@ class ValidateCustomerInfoForm(FormValidationAction):
         words = slot_value.split()
         if len(words) == 2:
             slots = {
-                "customer_name": slot_value.title(),
+                "given_customer_name": slot_value.title(),
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "customer_name": slot_value,
+                    "given_customer_name": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "customer_name": None,
+                    "given_customer_name": None,
                     "validate_counter": validate_counter
                 }
         return slots
@@ -169,7 +169,7 @@ class ValidateCustomerInfoForm(FormValidationAction):
         return slots
 
     def validate_customer_phone_number_confirmed(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict, ) -> Dict[Text, Any]:
-        validate_limit = 2
+        validate_limit = 0
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
         latest_intent = tracker.get_intent_of_latest_message()
@@ -194,6 +194,21 @@ class ValidateCustomerInfoForm(FormValidationAction):
 class ValidateClaimReportForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_claim_report_form"
+
+    async def extract_incident_time(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
+        logging.critical("Y"*10)
+        incident_time = tracker.get_slot("incident_time")
+        if incident_time:
+            logging.critical(f"Slot incident_time exists with value {incident_time}")
+        else:
+            for entity in tracker.latest_message['entities']:
+                entity_name = entity["entity"]
+                if entity_name == "time":
+                    entity_value = entity["value"]
+                    logging.critical(f"Found entity {entity_name} with value {entity_value}")
+                    incident_time = entity_value
+                    return {"incident_time": incident_time}
+
 
     def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
@@ -257,14 +272,11 @@ class ValidateClaimReportForm(FormValidationAction):
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        words = re.split('-|\s', slot_value)
+        words = re.split('\s', slot_value)
         words = [x for x in words if x]
         given_vehicle_number = ""
         for word in words:
-            if word.isdigit():
-                given_vehicle_number += word
-            else:
-                given_vehicle_number += word[0].upper()
+            given_vehicle_number += word.upper()
         match =re.match("^[A-Z0-9]*$", given_vehicle_number)
         if match:
             slots = {
@@ -294,12 +306,14 @@ class ValidateIncidentNumberForm(FormValidationAction):
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        words = re.split('-|\s', slot_value)
+        words = re.split('\s', slot_value)
         words = [x for x in words if x]
-        given_incident_number = words[0][0]
+        given_incident_number = ""
         for word in words:
-            if word.isdigit():
-                given_incident_number += word
+            if word in ["minus", "myślnik"]:
+                word = "-"
+            given_incident_number += word
+        given_incident_number = given_incident_number.replace("-", "")
         match1 =re.match("^[wh]\d{12}$", given_incident_number, re.IGNORECASE)
         match2 =re.match("^[wh]\d{14}$", given_incident_number, re.IGNORECASE)
         match = False
@@ -655,34 +669,34 @@ class ActionSelectUtterIncidentStatus(Action):
         if incident_status_path == "bot_info_inspection":
             incident_inspection_date = tracker.get_slot("incident_inspection_date")
             if incident_inspection_date:
-                events.append(FollowupAction("utter_incident_status_inspection"))
+                dispatcher.utter_template("utter_incident_status_inspection", tracker)
             else:
-                events.append(FollowupAction("utter_incident_status_no_inspection"))
+                dispatcher.utter_template("utter_incident_status_no_inspection", tracker)
         elif incident_status_path == "bot_info_withdrawal":
             incident_withdrawal_amount = tracker.get_slot("incident_withdrawal_amount")
             if incident_withdrawal_amount:
-                events.append(FollowupAction("utter_incident_status_withdrawal"))
+                dispatcher.utter_template("utter_incident_status_withdrawal", tracker)
             else:
-                events.append(FollowupAction("utter_incident_status_no_withdrawal"))
+                dispatcher.utter_template("utter_incident_status_no_withdrawal", tracker)
         elif incident_status_path == "bot_info_documents":
             incident_documents_submission_date = tracker.get_slot("incident_documents_submission_date")
             incident_missing_documents_list = tracker.get_slot("incident_missing_documents_list")
             if incident_documents_submission_date:
                 if incident_missing_documents_list:
-                    events.append(FollowupAction("utter_incident_status_date_list"))
+                    dispatcher.utter_template("utter_incident_status_date_list", tracker)
                 else:
-                    events.append(FollowupAction("utter_incident_status_date_no_list"))
+                    dispatcher.utter_template("utter_incident_status_date_no_list", tracker)
             else:
                 if incident_missing_documents_list:
-                    events.append(FollowupAction("utter_incident_status_no_date_list"))
+                    dispatcher.utter_template("utter_incident_status_no_date_list", tracker)
                 else:
-                    events.append(FollowupAction("utter_incident_status_no_date_no_list"))
+                    dispatcher.utter_template("utter_incident_status_no_date_no_list", tracker)
         elif incident_status_path == "consultant_direct":
-            events.append(FollowupAction("utter_incident_status_transfer"))
+            dispatcher.utter_template("utter_incident_status_transfer", tracker)
         elif incident_status_path == "manager_message":
-            events.append(FollowupAction("utter_incident_status_message"))
+            dispatcher.utter_template("utter_incident_status_message", tracker)
         else:
-            events.append(FollowupAction("utter_error"))
+            dispatcher.utter_template("utter_error", tracker)
         return events
 
 class ActionSelectUtterCustomerQuestion(Action):

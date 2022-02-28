@@ -101,6 +101,9 @@ slots:
   incident_status_path_flag:
     type: bool
     influence_conversation: true
+  time:
+    type: any
+    influence_conversation: false
   incident_time:
     type: any
     influence_conversation: false
@@ -227,7 +230,7 @@ responses:
         blocks:
           - text: 'W czym mogę pomóc?'
             sentence_time_max: 20000
-            sentence_end_silence_time: 2000
+            sentence_end_silence_time: 1800
     - text: 'W czym mogę pomóc?'
 
   # UTTER -----------------------------------------------------------------------------
@@ -347,7 +350,7 @@ responses:
       custom:
         blocks:
           - text: 'Oględziny zostały zaplanowane na dzień {incident_inspection_date}. Dziękuję za rozmowę.'
-            ssml: 'Oględziny zostały zaplanowane na dzień <say-as interpret-as="date" format="yyyy-mm-dd">{incident_inspection_date}</say-as>. Dziękuję za rozmowę.'
+            ssml: 'Oględziny zostały zaplanowane na dzień <say-as interpret-as="date" format="dd.mm.yyyy">{incident_inspection_date}</say-as>. Dziękuję za rozmowę.'
         end_of_conversation:
     - text: 'Oględziny zostały zaplanowane na dzień {incident_inspection_date}. Dziękuję za rozmowę.'
 
@@ -384,7 +387,7 @@ responses:
       custom:
         blocks:
           - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę.'
-            ssml: 'Dokumenty wpłynęły w dniu <say-as interpret-as="date" format="yyyy-mm-dd">{incident_documents_submission_date}</say-as>. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę.'
+            ssml: 'Dokumenty wpłynęły w dniu <say-as interpret-as="date" format="dd.mm.yyyy">{incident_documents_submission_date}</say-as>. Brakuje następujących dokumentów. <break time="800ms"/> {incident_missing_documents_list}. Dziękuję za rozmowę.'
         end_of_conversation:
     - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Brakuje następujących dokumentów: {incident_missing_documents_list}. Dziękuję za rozmowę.'
 
@@ -394,7 +397,7 @@ responses:
       custom:
         blocks:
           - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
-            ssml: 'Dokumenty wpłynęły w dniu <say-as interpret-as="date" format="yyyy-mm-dd">{incident_documents_submission_date}</say-as>. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
+            ssml: 'Dokumenty wpłynęły w dniu <say-as interpret-as="date" format="dd.mm.yyyy">{incident_documents_submission_date}</say-as>. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
         end_of_conversation:
     - text: 'Dokumenty wpłynęły w dniu {incident_documents_submission_date}. Dokumentacja jest kompletna. Dziękuję za rozmowę.'
 
@@ -470,7 +473,7 @@ responses:
             sentence_end_silence_time: 3000
     - text: 'Proszę o podanie numeru polisy.'
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_insurance_type:
+  utter_ask_claim_report_form_given_insurance_type:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -478,7 +481,7 @@ responses:
             sentence_end_silence_time: 1000
     - text: 'Zgłoszenie dotyczy polisy własnej, czy sprawcy?'
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_vehicle_number:
+  utter_ask_claim_report_form_given_vehicle_number:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -523,7 +526,7 @@ responses:
             sentence_end_silence_time: 3000
             speech_contexts:
               - phrases:
-                  - '$OOV_CLASS_ALPHANUMERIC_SEQUENCE'
+                  - '$OOV_CLASS_DIGIT_SEQUENCE'
             text_conditional_actions:
               -  regexp: 'w[0-9]{{12}}$'
                  end_sentence: True

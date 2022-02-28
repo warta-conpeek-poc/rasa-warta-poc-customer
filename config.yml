@@ -26,7 +26,7 @@ pipeline:
 policies:
   - name: AugmentedMemoizationPolicy
     constrain_similarities: True
-    max_history: 8
+    max_history: 6
   - name: TEDPolicy
     constrain_similarities: True
     max_history: 10

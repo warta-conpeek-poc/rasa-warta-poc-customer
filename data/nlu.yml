@@ -87,6 +87,7 @@ nlu:
     - zgłoszenie szkody
     - sąsiad zalał mi mieszkanie
     - pralka przestała działać
+    - miałem wypadek
     - miałem wypadek, chciałem to zgłosić
     - sprawca kolizji ma ubezpieczenie w Warcie
     - ktoś się włamał do mojego [mieszkania]{"entity": "given_subject_type", "value": "PROPERTY"}
