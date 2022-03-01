@@ -252,6 +252,21 @@ responses:
           export:
             next_action: 'call'
             call_number: 'assistance'
+            customer_phone_number: '{customer_phone_number}'
+            given_customer_name: '{given_customer_name}'
+            given_customer_pesel: '{given_customer_pesel}'
+            given_subject_type: '{given_subject_type}'
+            given_insurance_number: '{given_insurance_number}'
+            given_incident_number: '{given_insurance_number}'
+            given_vehicle_number: '{given_vehicle_number}'
+            given_insurance_type: '{given_insurance_type}'
+            given_incident_time: '{given_incident_time}'
+            system_customer_name: '{system_customer_name}'
+            system_customer_pesel: '{system_customer_pesel}'
+            system_subject_type: '{system_subject_type}'
+            system_vehicle_number: '{system_vehicle_number}'
+            system_insurance_number: '{system_insurance_number}'
+            system_incident_number: '{system_insurance_number}'
     - text: ''
 
   # UTTER -----------------------------------------------------------------------------
@@ -263,7 +278,22 @@ responses:
         end_of_conversation:
           export:
             next_action: 'project'
-            call_number: 'Claim Request'
+            project_name: 'Claim Request'
+            customer_phone_number: '{customer_phone_number}'
+            given_customer_name: '{given_customer_name}'
+            given_customer_pesel: '{given_customer_pesel}'
+            given_subject_type: '{given_subject_type}'
+            given_insurance_number: '{given_insurance_number}'
+            given_incident_number: '{given_insurance_number}'
+            given_vehicle_number: '{given_vehicle_number}'
+            given_insurance_type: '{given_insurance_type}'
+            given_incident_time: '{given_incident_time}'
+            system_customer_name: '{system_customer_name}'
+            system_customer_pesel: '{system_customer_pesel}'
+            system_subject_type: '{system_subject_type}'
+            system_vehicle_number: '{system_vehicle_number}'
+            system_insurance_number: '{system_insurance_number}'
+            system_incident_number: '{system_insurance_number}'
     - text: ''
 
   # UTTER -----------------------------------------------------------------------------
@@ -276,14 +306,21 @@ responses:
           export:
             next_action: 'project'
             project_name: 'Claim Status'
+            customer_phone_number: '{customer_phone_number}'
             given_customer_name: '{given_customer_name}'
             given_customer_pesel: '{given_customer_pesel}'
             given_subject_type: '{given_subject_type}'
             given_insurance_number: '{given_insurance_number}'
+            given_incident_number: '{given_insurance_number}'
+            given_vehicle_number: '{given_vehicle_number}'
+            given_insurance_type: '{given_insurance_type}'
+            given_incident_time: '{given_incident_time}'
             system_customer_name: '{system_customer_name}'
             system_customer_pesel: '{system_customer_pesel}'
             system_subject_type: '{system_subject_type}'
+            system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
+            system_incident_number: '{system_insurance_number}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -296,14 +333,21 @@ responses:
           export:
             next_action: 'project'
             project_name: 'Customer Care'
+            customer_phone_number: '{customer_phone_number}'
             given_customer_name: '{given_customer_name}'
             given_customer_pesel: '{given_customer_pesel}'
             given_subject_type: '{given_subject_type}'
             given_insurance_number: '{given_insurance_number}'
+            given_incident_number: '{given_insurance_number}'
+            given_vehicle_number: '{given_vehicle_number}'
+            given_insurance_type: '{given_insurance_type}'
+            given_incident_time: '{given_incident_time}'
             system_customer_name: '{system_customer_name}'
             system_customer_pesel: '{system_customer_pesel}'
             system_subject_type: '{system_subject_type}'
+            system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
+            system_incident_number: '{system_insurance_number}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------

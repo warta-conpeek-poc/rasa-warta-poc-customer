@@ -53,114 +53,114 @@ stories:
 
 - story: claim report without customer phone
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - slot_was_set:
-    - customer_phone_number_confirmed: false
-  - active_loop: null
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - slot_was_set:
+      - customer_phone_number_confirmed: false
+    - active_loop: null
+    - action: utter_claim_transfer
 
 - story: claim report without incident subject p1
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - active_loop: null
-  - slot_was_set:
-    - customer_phone_number_confirmed: true
-  - action: action_set_given_subject_type
-  - slot_was_set:
-    - given_subject_type: null
-  - action: utter_describe_incident
-  - intent: claim_report
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - active_loop: null
+    - slot_was_set:
+      - customer_phone_number_confirmed: true
+    - action: action_set_given_subject_type
+    - slot_was_set:
+      - given_subject_type: null
+    - action: utter_describe_incident
+    - intent: claim_report
+    - action: utter_claim_transfer
 
 - story: claim report without incident subject p2
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - active_loop: null
-  - slot_was_set:
-    - customer_phone_number_confirmed: true
-  - action: action_set_given_subject_type
-  - slot_was_set:
-    - given_subject_type: null
-  - action: utter_describe_incident
-  - intent: claim_report
-    entities:
-    - time: any
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - active_loop: null
+    - slot_was_set:
+      - customer_phone_number_confirmed: true
+    - action: action_set_given_subject_type
+    - slot_was_set:
+      - given_subject_type: null
+    - action: utter_describe_incident
+    - intent: claim_report
+      entities:
+      - time: any
+    - action: utter_claim_transfer
 
 - story: claim report with initial incident subject
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - active_loop: null
-  - slot_was_set:
-    - customer_phone_number_confirmed: true
-  - action: action_set_given_subject_type
-  - slot_was_set:
-    - given_subject_type: any
-  - action: action_init_claim_report
-  - action: claim_report_form
-  - active_loop: claim_report_form
-  - active_loop: null
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - active_loop: null
+    - slot_was_set:
+      - customer_phone_number_confirmed: true
+    - action: action_set_given_subject_type
+    - slot_was_set:
+      - given_subject_type: any
+    - action: action_init_claim_report
+    - action: claim_report_form
+    - active_loop: claim_report_form
+    - active_loop: null
+    - action: utter_claim_transfer
 
 - story: claim report with refilled claim subject
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - slot_was_set:
-    - customer_phone_number_confirmed: true
-  - active_loop: null
-  - action: action_set_given_subject_type
-  - slot_was_set:
-    - given_subject_type: null
-  - action: utter_describe_incident
-  - intent: claim_report
-    entities:
-    - given_subject_type: any
-  - slot_was_set:
-    - given_subject_type: any
-  - action: action_init_claim_report
-  - action: claim_report_form
-  - active_loop: claim_report_form
-  - active_loop: null
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - slot_was_set:
+      - customer_phone_number_confirmed: true
+    - active_loop: null
+    - action: action_set_given_subject_type
+    - slot_was_set:
+      - given_subject_type: null
+    - action: utter_describe_incident
+    - intent: claim_report
+      entities:
+      - given_subject_type: any
+    - slot_was_set:
+      - given_subject_type: any
+    - action: action_init_claim_report
+    - action: claim_report_form
+    - active_loop: claim_report_form
+    - active_loop: null
+    - action: utter_claim_transfer
 
 - story: claim report with filled claim subject and time
   steps:
-  - checkpoint: claim_need_assistance
-  - intent: deny
-  - action: customer_info_form
-  - active_loop: customer_info_form
-  - slot_was_set:
-    - customer_phone_number_confirmed: true
-  - active_loop: null
-  - action: action_set_given_subject_type
-  - slot_was_set:
-    - given_subject_type: null
-  - action: utter_describe_incident
-  - intent: claim_report
-    entities:
-    - time: any
-    - given_subject_type: any
-  - slot_was_set:
-    - given_subject_type: any
-  - action: action_init_claim_report
-  - action: claim_report_form
-  - active_loop: claim_report_form
-  - active_loop: null
-  - action: utter_claim_transfer
+    - checkpoint: claim_need_assistance
+    - intent: deny
+    - action: customer_info_form
+    - active_loop: customer_info_form
+    - slot_was_set:
+      - customer_phone_number_confirmed: true
+    - active_loop: null
+    - action: action_set_given_subject_type
+    - slot_was_set:
+      - given_subject_type: null
+    - action: utter_describe_incident
+    - intent: claim_report
+      entities:
+      - time: any
+      - given_subject_type: any
+    - slot_was_set:
+      - given_subject_type: any
+    - action: action_init_claim_report
+    - action: claim_report_form
+    - active_loop: claim_report_form
+    - active_loop: null
+    - action: utter_claim_transfer
 
 

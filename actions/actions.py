@@ -347,6 +347,7 @@ class ValidateIncidentNumberForm(FormValidationAction):
             system_subject_type = subject_type_map[baza_szkody_dict[given_incident_number]["Rodzaj przedmiotu"]]
             system_customer_name = baza_szkody_dict[given_incident_number]["Imię i nazwisko poszkodowanego"]
             system_customer_pesel = baza_szkody_dict[given_incident_number]["Pesel poszkodowanego"]
+            system_vehicle_number = baza_szkody_dict[given_incident_number]["Nr rejestracyjny"]
             slots = {
                 "given_incident_number": given_incident_number,
                 "system_incident_number": given_incident_number,
@@ -354,6 +355,7 @@ class ValidateIncidentNumberForm(FormValidationAction):
                 "system_subject_type": system_subject_type,
                 "system_customer_name": system_customer_name,
                 "system_customer_pesel": system_customer_pesel,
+                "system_vehicle_number": system_vehicle_number,
                 "system_agent_email": system_agent_email,
                 "incident_number_verified": True,
                 "incident_missing_documents_list": incident_missing_documents_list,
@@ -425,6 +427,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
             system_subject_type = baza_polisy_dict[given_insurance_number]["Przedmiot ubezpieczenia"]
             system_customer_pesel = baza_polisy_dict[given_insurance_number]["Pesel ubezpieczonego"]
             system_customer_name = baza_polisy_dict[given_insurance_number]["Imię i nazwisko ubezpieczonego"]
+            system_vehicle_number = baza_polisy_dict[given_insurance_number]["Nr rejestracyjny / adres"]
             slots = {
                 "given_insurance_number": given_insurance_number.upper(),
                 "system_insurance_number": given_insurance_number.upper(),
@@ -432,6 +435,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
                 "system_subject_type": system_subject_type,
                 "system_customer_pesel": system_customer_pesel,
                 "system_customer_name": system_customer_name,
+                "system_vehicle_number": system_vehicle_number,
                 "insurance_payment_1_amount": insurance_payment_1_amount,
                 "insurance_payment_1_done": insurance_payment_1_done,
                 "insurance_payment_1_date": insurance_payment_1_date,

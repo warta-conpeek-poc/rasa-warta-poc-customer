@@ -4,6 +4,8 @@ stories:
 # Assistance flow
 - story: assistance request
   steps:
-  - intent: assistance_request
-  - action: utter_assistance_transfer
+    - intent: connected
+    - action: utter_greet
+    - intent: assistance_request
+    - action: utter_assistance_transfer
 

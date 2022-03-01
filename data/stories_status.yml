@@ -4,7 +4,7 @@ stories:
 
 # Status flow
 
-- story: A10 status without incident number
+- story: status without incident number
   steps:
   - intent: connected
   - action: utter_greet
@@ -23,7 +23,7 @@ stories:
   - active_loop: null
   - action: utter_incident_status_transfer
 
-- story: A20 status without clarifying
+- story: status without clarifying
   steps:
   - intent: connected
   - action: utter_greet
@@ -51,7 +51,7 @@ stories:
   - action: action_perform_customer_authentication
   - checkpoint: status_customer_authentication
 
-- story: A30 status with clarifying
+- story: status with clarifying
   steps:
   - intent: connected
   - action: utter_greet
@@ -88,14 +88,14 @@ stories:
   - action: action_perform_customer_authentication
   - checkpoint: status_customer_authentication
 
-- story: A40 status authentication failed
+- story: status authentication failed
   steps:
   - checkpoint: status_customer_authentication
   - slot_was_set:
     - customer_authenticated: false
   - action: utter_incident_status_transfer
 
-- story: A50 status authentication succeed but without clarifying
+- story: status authentication succeed but without clarifying
   steps:
   - checkpoint: status_customer_authentication
   - slot_was_set:
@@ -105,7 +105,7 @@ stories:
     - incident_status_path_flag: false
   - action: utter_incident_status_transfer
 
-- story: A60 status authentication succeed - select utter
+- story: status authentication succeed - select utter
   steps:
   - checkpoint: status_customer_authentication
   - slot_was_set:
