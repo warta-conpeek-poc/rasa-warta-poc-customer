@@ -284,7 +284,7 @@ responses:
             given_customer_pesel: '{given_customer_pesel}'
             given_subject_type: '{given_subject_type}'
             given_insurance_number: '{given_insurance_number}'
-            given_incident_number: '{given_insurance_number}'
+            given_incident_number: '{given_incident_number}'
             given_vehicle_number: '{given_vehicle_number}'
             given_insurance_type: '{given_insurance_type}'
             given_incident_time: '{given_incident_time}'
@@ -293,7 +293,7 @@ responses:
             system_subject_type: '{system_subject_type}'
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
-            system_incident_number: '{system_insurance_number}'
+            system_incident_number: '{system_incident_number}'
     - text: ''
 
   # UTTER -----------------------------------------------------------------------------
@@ -320,7 +320,7 @@ responses:
             system_subject_type: '{system_subject_type}'
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
-            system_incident_number: '{system_insurance_number}'
+            system_incident_number: '{system_incident_number}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -347,7 +347,7 @@ responses:
             system_subject_type: '{system_subject_type}'
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
-            system_incident_number: '{system_insurance_number}'
+            system_incident_number: '{system_incident_number}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -531,6 +531,9 @@ responses:
         blocks:
           - text: 'Proszę o podanie numeru rejestracyjnego auta.'
             sentence_end_silence_time: 2000
+            speech_contexts:
+              - phrases:
+                  - '$OOV_CLASS_DIGIT_SEQUENCE'
     - text: 'Proszę o podanie numeru rejestracyjnego auta.'
 
   # ---------------------- FORM CUSTOMER INFO ------------------------------------------
