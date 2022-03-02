@@ -247,7 +247,7 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-          - text: ''
+          - text: 'Przekierowuję połączenie.'
         end_of_conversation:
           export:
             next_action: 'call'
@@ -267,7 +267,8 @@ responses:
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
             system_incident_number: '{system_insurance_number}'
-    - text: ''
+            system_agent_email: '{system_agent_email}'
+    - text: 'Przekierowuję połączenie.'
 
   # UTTER -----------------------------------------------------------------------------
   utter_claim_transfer:
@@ -294,6 +295,7 @@ responses:
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
             system_incident_number: '{system_incident_number}'
+            system_agent_email: '{system_agent_email}'
     - text: ''
 
   # UTTER -----------------------------------------------------------------------------
@@ -321,6 +323,7 @@ responses:
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
             system_incident_number: '{system_incident_number}'
+            system_agent_email: '{system_agent_email}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -348,6 +351,7 @@ responses:
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
             system_incident_number: '{system_incident_number}'
+            system_agent_email: '{system_agent_email}'
     - text: ""
 
   # UTTER -----------------------------------------------------------------------------
@@ -469,6 +473,23 @@ responses:
       custom:
         blocks:
          - text: 'Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę.'
+            next_action: 'email'
+            customer_phone_number: '{customer_phone_number}'
+            given_customer_name: '{given_customer_name}'
+            given_customer_pesel: '{given_customer_pesel}'
+            given_subject_type: '{given_subject_type}'
+            given_insurance_number: '{given_insurance_number}'
+            given_incident_number: '{given_insurance_number}'
+            given_vehicle_number: '{given_vehicle_number}'
+            given_insurance_type: '{given_insurance_type}'
+            given_incident_time: '{given_incident_time}'
+            system_customer_name: '{system_customer_name}'
+            system_customer_pesel: '{system_customer_pesel}'
+            system_subject_type: '{system_subject_type}'
+            system_vehicle_number: '{system_vehicle_number}'
+            system_insurance_number: '{system_insurance_number}'
+            system_incident_number: '{system_incident_number}'
+            system_agent_email: '{system_agent_email}'
         end_of_conversation:
     - text: 'Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę.'
 
