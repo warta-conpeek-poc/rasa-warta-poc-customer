@@ -472,8 +472,11 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-         - text: 'Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę.'
+          - text: 'Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę.'
+        end_of_conversation:
+          export:
             next_action: 'email'
+            system_agent_email: '{system_agent_email}'
             customer_phone_number: '{customer_phone_number}'
             given_customer_name: '{given_customer_name}'
             given_customer_pesel: '{given_customer_pesel}'
@@ -489,8 +492,6 @@ responses:
             system_vehicle_number: '{system_vehicle_number}'
             system_insurance_number: '{system_insurance_number}'
             system_incident_number: '{system_incident_number}'
-            system_agent_email: '{system_agent_email}'
-        end_of_conversation:
     - text: 'Przekazaliśmy zapytanie do Agenta. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
