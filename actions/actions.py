@@ -312,10 +312,10 @@ class ValidateIncidentNumberForm(FormValidationAction):
         for word in words:
             if word in ["minus", "myślnik"]:
                 word = "-"
-            given_incident_number += word
+            given_incident_number += word.upper()
         given_incident_number = given_incident_number.replace("-", "")
-        match1 =re.match("^[wh]\d{12}$", given_incident_number, re.IGNORECASE)
-        match2 =re.match("^[wh]\d{14}$", given_incident_number, re.IGNORECASE)
+        match1 =re.match("^[WH]\d{12}$", given_incident_number, re.IGNORECASE)
+        match2 =re.match("^[WH]\d{14}$", given_incident_number, re.IGNORECASE)
         match = False
         if match1:
             match = True

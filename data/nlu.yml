@@ -67,6 +67,7 @@ nlu:
     - dotyczy polisy [sprawcy]{"entity": "insurance_type", "value": "external"}
     - [nieruchomości]{"entity": "given_subject_type", "value": "PROPERTY"}
     - [pojazdu]{"entity": "given_subject_type", "value": "MOTOR"}
+    - [pojazdów]{"entity": "given_subject_type", "value": "MOTOR"}
     - dotyczy [samochodu]{"entity": "given_subject_type", "value": "MOTOR"}
     - dotyczy [auta]{"entity": "given_subject_type", "value": "MOTOR"}
     - [osoby]{"entity": "given_subject_type", "value": "PERSONAL"}
