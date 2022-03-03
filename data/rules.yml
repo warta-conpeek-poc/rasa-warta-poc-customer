@@ -15,7 +15,12 @@ rules:
 - rule: ASR low confidence
   steps:
   - intent: asr_low_confidence
-  - action: action_low_confidence
+  - action: action_asr_low_confidence
+
+- rule: NLU low confidence
+  steps:
+  - intent: nlu_fallback
+  - action: action_nlu_low_confidence
 
 - rule: out-of-scope
   steps:

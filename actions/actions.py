@@ -45,7 +45,7 @@ class ActionSessionStart(Action):
 
     async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
         logging.critical("Session started !!!")
-        events = [SessionStarted(), ActionExecuted("action_listen")]
+        events = [ActionExecuted("action_listen")]
         metadata = tracker.get_slot("session_started_metadata")
         logging.critical(metadata)
         if metadata and "caller_contact_address" in metadata:
@@ -58,20 +58,45 @@ class ActionSessionStart(Action):
         events.append(SlotSet("validate_counter", 0))
         return events
 
-class ActionLowConfidence(Action):
+class ActionAsrLowConfidence(Action):
 
     def name(self) -> Text:
-        return "action_low_confidence"
+        return "action_asr_low_confidence"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        utter_list = []
         metadata = tracker.latest_message["metadata"]
         logging.info(metadata)
         if "stop_playback_date" in metadata and not metadata["stop_playback_date"]:
-            utter_list.append("")
+            text = ""
         else:
-            utter_list.append("Czy możesz powtórzyć?")
-        text = random.choice(utter_list)
+            text = "Czy możesz powtórzyć?"
+        for e in reversed(tracker.events):
+            event_name = e["event"]
+            logging.critical(f"Event: {event_name}")
+            logging.critical(e)
+        bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
+        custom = {
+            "blocks": bot_event["data"]["custom"]["blocks"]
+        }
+        custom["blocks"][0]["text"] = text
+        if tracker.get_latest_input_channel() in ("conpeek-voice", "conpeek-text"):
+            dispatcher.utter_message(json_message=custom)
+        else:
+            dispatcher.utter_message(text=text)
+        return [UserUtteranceReverted()]
+
+class ActionNluLowConfidence(Action):
+
+    def name(self) -> Text:
+        return "action_nlu_low_confidence"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        metadata = tracker.latest_message["metadata"]
+        logging.info(metadata)
+        if "stop_playback_date" in metadata and not metadata["stop_playback_date"]:
+            text = ""
+        else:
+            text = "Czy możesz powtórzyć?"
         bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
         custom = {
             "blocks": bot_event["data"]["custom"]["blocks"]
@@ -89,6 +114,10 @@ class ActionOutOfScope(Action):
         return "action_out_of_scope"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        for e in reversed(tracker.events):
+            event_name = e["event"]
+            logging.critical(f"Event: {event_name}")
+            logging.critical(e)
         bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
         if bot_event.get("data").get("custom").get("out_of_scope"):
             text = bot_event["data"]["custom"]["blocks"][0]["text"]
@@ -195,19 +224,19 @@ class ValidateClaimReportForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_claim_report_form"
 
-    async def extract_incident_time(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
+    async def extract_given_incident_time(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
         logging.critical("Y"*10)
-        incident_time = tracker.get_slot("incident_time")
-        if incident_time:
-            logging.critical(f"Slot incident_time exists with value {incident_time}")
+        given_incident_time = tracker.get_slot("given_incident_time")
+        if given_incident_time:
+            logging.critical(f"Slot given_incident_time exists with value {given_incident_time}")
         else:
             for entity in tracker.latest_message['entities']:
                 entity_name = entity["entity"]
                 if entity_name == "time":
                     entity_value = entity["value"]
                     logging.critical(f"Found entity {entity_name} with value {entity_value}")
-                    incident_time = entity_value
-                    return {"incident_time": incident_time}
+                    given_incident_time = entity_value
+                    return {"given_incident_time": given_incident_time}
 
 
     def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:

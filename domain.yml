@@ -104,7 +104,7 @@ slots:
   time:
     type: any
     influence_conversation: false
-  incident_time:
+  given_incident_time:
     type: any
     influence_conversation: false
   incident_withdrawal_amount:
@@ -155,7 +155,8 @@ slots:
 
 actions:
   - action_session_start
-  - action_low_confidence
+  - action_asr_low_confidence
+  - action_nlu_low_confidence
   - action_set_given_subject_type
   - action_init_claim_report
   - action_set_incident_status_path
@@ -183,7 +184,7 @@ forms:
 
   claim_report_form:
     required_slots:
-      incident_time:
+      given_incident_time:
         - type: from_entity
           entity: time
       given_insurance_number:
@@ -523,7 +524,7 @@ responses:
 
   # ---------------------- FORM CLAIM REPORT ------------------------------------------
   # UTTER -----------------------------------------------------------------------------
-  utter_ask_claim_report_form_incident_time:
+  utter_ask_claim_report_form_given_incident_time:
     - channel: conpeek-voice
       custom:
         blocks:
