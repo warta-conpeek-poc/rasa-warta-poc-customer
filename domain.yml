@@ -225,6 +225,10 @@ responses:
     - text: 'Coś poszło nie tak. To jest komunikat diagnostyczny.'
 
   # UTTER -----------------------------------------------------------------------------
+  utter_default:
+    - text: 'Przepraszam, ale nie zrozumiałem. Czy możesz powtórzyć?'
+
+  # UTTER -----------------------------------------------------------------------------
   utter_greet:
     - channel: conpeek-voice
       custom:

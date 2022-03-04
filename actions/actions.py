@@ -70,10 +70,6 @@ class ActionAsrLowConfidence(Action):
             text = ""
         else:
             text = "Czy możesz powtórzyć?"
-        for e in reversed(tracker.events):
-            event_name = e["event"]
-            logging.critical(f"Event: {event_name}")
-            logging.critical(e)
         bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
         custom = {
             "blocks": bot_event["data"]["custom"]["blocks"]
@@ -114,10 +110,6 @@ class ActionOutOfScope(Action):
         return "action_out_of_scope"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        for e in reversed(tracker.events):
-            event_name = e["event"]
-            logging.critical(f"Event: {event_name}")
-            logging.critical(e)
         bot_event = next(e for e in reversed(tracker.events) if e["event"] == "bot")
         if bot_event.get("data").get("custom").get("out_of_scope"):
             text = bot_event["data"]["custom"]["blocks"][0]["text"]

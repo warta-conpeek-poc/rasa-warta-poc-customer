@@ -1,11 +1,11 @@
 version: "2.0"
 
 stories:
-# Assistance flow
-- story: assistance request
-  steps:
-    - intent: connected
-    - action: utter_greet
-    - intent: assistance_request
-    - action: utter_assistance_transfer
+
+  - story: assistance request
+    steps:
+      - intent: connected
+      - action: utter_greet
+      - intent: assistance_request
+      - action: utter_assistance_transfer
 

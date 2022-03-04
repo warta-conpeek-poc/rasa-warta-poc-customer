@@ -27,6 +27,11 @@ rules:
   - intent: out_of_scope
   - action: action_out_of_scope
 
+- rule:  inform out of form
+  steps:
+  - intent: inform
+  - action: action_default_fallback
+
 - rule: Activate insurance_number_form for customer insurance questions
   steps:
   - or:
