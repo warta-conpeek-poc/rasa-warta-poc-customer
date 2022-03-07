@@ -239,6 +239,20 @@ responses:
     - text: 'W czym mogę pomóc?'
 
   # UTTER -----------------------------------------------------------------------------
+  utter_disconnected:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: ''
+        end_of_conversation:
+    - channel: conpeek-text
+      custom:
+        blocks:
+          - text: ''
+        end_of_conversation:
+    - text: ''
+
+  # UTTER -----------------------------------------------------------------------------
   utter_goodbye:
     - channel: conpeek-voice
       custom:

@@ -2,10 +2,15 @@ version: "2.0"
 
 rules:
 
-- rule: Say goodbye anytime the user says goodbye
+- rule: Say greet on connection start
   steps:
   - intent: connected
   - action: utter_greet
+
+- rule: Say nothing on connection stop
+  steps:
+  - intent: disconnected
+  - action: utter_disconnected
 
 - rule: Say goodbye anytime the user says goodbye
   steps:
