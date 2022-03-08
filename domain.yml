@@ -226,6 +226,15 @@ responses:
 
   # UTTER -----------------------------------------------------------------------------
   utter_default:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: 'Przepraszam, ale nie zrozumiałem. Czy możesz powtórzyć?'
+    - channel: conpeek-text
+      custom:
+        blocks:
+          - text: 'Przepraszam, ale nie zrozumiałem. Czy możesz powtórzyć?'
+            typing_delay: 1000
     - text: 'Przepraszam, ale nie zrozumiałem. Czy możesz powtórzyć?'
 
   # UTTER -----------------------------------------------------------------------------
@@ -555,7 +564,16 @@ responses:
       custom:
         blocks:
           - text: 'Proszę o podanie numeru polisy.'
+            sentence_time_max: 30000
             sentence_end_silence_time: 3000
+            speech_contexts:
+              - phrases:
+                - '$OOV_CLASS_DIGIT_SEQUENCE'
+            text_conditional_actions:
+              -  regexp: '[0-9]{{12}}$'
+                 end_sentence: True
+                 dtmf_timeout: 5
+                 remove_whitespace: True
     - text: 'Proszę o podanie numeru polisy.'
   # UTTER -----------------------------------------------------------------------------
   utter_ask_claim_report_form_given_insurance_type:

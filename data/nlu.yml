@@ -24,7 +24,6 @@ nlu:
     - ile masz lat?
     - jaka jest pogoda?
 
-
 - intent: affirm
   examples: |
     - tak
@@ -42,7 +41,6 @@ nlu:
     - nigdy
     - nie ma mowy
     - nie zgadzam się
-    - w życiu
     - w żadnym wypadku
 
 - intent: inform
