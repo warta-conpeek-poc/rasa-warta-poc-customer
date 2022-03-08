@@ -2,8 +2,6 @@ version: "2.0"
 
 stories:
 
-# Status flow
-
 - story: status without incident number
   steps:
   - intent: connected
