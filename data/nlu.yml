@@ -57,12 +57,12 @@ nlu:
     - przedwczoraj
     - piątego maja
     - dwa dni temu temu
-    - [własnej]{"entity": "insurance_type", "value": "internal"}
-    - [mojej]{"entity": "insurance_type", "value": "internal"}
-    - dotyczy polisy [własnej]{"entity": "insurance_type", "value": "internal"}
-    - dotyczy polisy [mojej]{"entity": "insurance_type", "value": "internal"}
-    - [sprawcy]{"entity": "insurance_type", "value": "external"}
-    - dotyczy polisy [sprawcy]{"entity": "insurance_type", "value": "external"}
+    - [własnej]{"entity": "given_insurance_type", "value": "internal"}
+    - [mojej]{"entity": "given_insurance_type", "value": "internal"}
+    - dotyczy polisy [własnej]{"entity": "given_insurance_type", "value": "internal"}
+    - dotyczy polisy [mojej]{"entity": "given_insurance_type", "value": "internal"}
+    - [sprawcy]{"entity": "given_insurance_type", "value": "external"}
+    - dotyczy polisy [sprawcy]{"entity": "given_insurance_type", "value": "external"}
     - [nieruchomości]{"entity": "given_subject_type", "value": "PROPERTY"}
     - [pojazdu]{"entity": "given_subject_type", "value": "MOTOR"}
     - [pojazdów]{"entity": "given_subject_type", "value": "MOTOR"}

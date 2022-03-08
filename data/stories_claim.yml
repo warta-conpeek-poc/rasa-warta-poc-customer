@@ -2,13 +2,23 @@ version: "2.0"
 
 stories:
 
-- story: claim report
+- story: claim report no subject with assistance
   steps:
     - intent: connected
     - action: utter_greet
     - intent: claim_report
     - action: utter_give_assistance
-    - checkpoint: claim_need_assistance
+    - intent: affirm
+    - action: utter_assistance_transfer
+
+- story: claim report no subject with assistance
+  steps:
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+    - action: utter_give_assistance
+    - intent: deny
+    - checkpoint: customer_info
 
 - story: claim report with given_subject_type
   steps:
@@ -19,8 +29,34 @@ stories:
         - given_subject_type: any
     - slot_was_set:
         - given_subject_type: any
-    - action: utter_give_assistance
-    - checkpoint: claim_need_assistance
+    - action: action_need_assistance_question
+    - checkpoint: customer_info
+
+- story: claim report with given_subject_type
+  steps:
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+      entities:
+        - given_subject_type: any
+    - slot_was_set:
+        - given_subject_type: any
+    - action: action_need_assistance_question
+    - intent: affirm
+    - action: utter_assistance_transfer
+
+- story: claim report with given_subject_type
+  steps:
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+      entities:
+        - given_subject_type: any
+    - slot_was_set:
+        - given_subject_type: any
+    - action: action_need_assistance_question
+    - intent: deny
+    - checkpoint: customer_info
 
 - story: claim report with time
   steps:
@@ -30,7 +66,19 @@ stories:
       entities:
         - time: any
     - action: utter_give_assistance
-    - checkpoint: claim_need_assistance
+    - intent: affirm
+    - action: utter_assistance_transfer
+
+- story: claim report with time
+  steps:
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+      entities:
+        - time: any
+    - action: utter_give_assistance
+    - intent: deny
+    - checkpoint: customer_info
 
 - story: claim report with given_subject_type and time
   steps:
@@ -42,19 +90,40 @@ stories:
         - given_subject_type: any
     - slot_was_set:
         - given_subject_type: any
-    - action: utter_give_assistance
-    - checkpoint: claim_need_assistance
+    - action: action_need_assistance_question
+    - checkpoint: customer_info
 
-- story: claim report with assistance
+- story: claim report with given_subject_type and time
   steps:
-    - checkpoint: claim_need_assistance
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+      entities:
+        - time: any
+        - given_subject_type: any
+    - slot_was_set:
+        - given_subject_type: any
+    - action: action_need_assistance_question
     - intent: affirm
     - action: utter_assistance_transfer
 
+- story: claim report with given_subject_type and time
+  steps:
+    - intent: connected
+    - action: utter_greet
+    - intent: claim_report
+      entities:
+        - time: any
+        - given_subject_type: any
+    - slot_was_set:
+        - given_subject_type: any
+    - action: action_need_assistance_question
+    - intent: deny
+    - checkpoint: customer_info
+
 - story: claim report without customer phone
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - slot_was_set:
@@ -64,8 +133,7 @@ stories:
 
 - story: claim report without incident subject p1
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - active_loop: null
@@ -80,8 +148,7 @@ stories:
 
 - story: claim report without incident subject p2
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - active_loop: null
@@ -98,8 +165,7 @@ stories:
 
 - story: claim report with initial incident subject
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - active_loop: null
@@ -116,8 +182,7 @@ stories:
 
 - story: claim report with refilled claim subject
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - slot_was_set:
@@ -140,8 +205,7 @@ stories:
 
 - story: claim report with filled claim subject and time
   steps:
-    - checkpoint: claim_need_assistance
-    - intent: deny
+    - checkpoint: customer_info
     - action: customer_info_form
     - active_loop: customer_info_form
     - slot_was_set:

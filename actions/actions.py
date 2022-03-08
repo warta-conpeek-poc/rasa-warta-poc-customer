@@ -128,6 +128,22 @@ class ActionOutOfScope(Action):
             dispatcher.utter_message(text=text)
         return [UserUtteranceReverted()]
 
+class ActionNeedAssistanceQuestion(Action):
+
+    def name(self) -> Text:
+        return "action_need_assistance_question"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        logging.critical('Started action_need_assistance_question')
+        given_subject_type = tracker.get_slot("given_subject_type")
+        if given_subject_type == 'MOTOR':
+            logging.critical('dispatcher.utter_message(response=utter_give_assistance)')
+            dispatcher.utter_message(template='utter_give_assistance')
+            return [FollowupAction('action_listen')]
+        else:
+            return [FollowupAction('customer_info_form')]
+
+
 class ValidateCustomerInfoForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_customer_info_form"
@@ -244,11 +260,24 @@ class ValidateClaimReportForm(FormValidationAction):
             if word.isdigit():
                 given_insurance_number += word
         match =re.match("^9\d{11}$", given_insurance_number)
-        if match:
+        logging.critical(f"Got insurance number: {given_insurance_number} with matching result: {match}")
+        if match and given_insurance_number in baza_polisy_dict:
+            logging.critical(f"Insurance {given_insurance_number} found in database.")
+            system_subject_type = baza_polisy_dict[given_insurance_number]["Przedmiot ubezpieczenia"]
+            system_customer_pesel = baza_polisy_dict[given_insurance_number]["Pesel ubezpieczonego"]
+            system_customer_name = baza_polisy_dict[given_insurance_number]["Imię i nazwisko ubezpieczonego"]
+            system_vehicle_number = baza_polisy_dict[given_insurance_number]["Nr rejestracyjny / adres"]
             slots = {
-                "given_insurance_number": given_insurance_number,
+                "given_insurance_number": given_insurance_number.upper(),
+                "system_insurance_number": given_insurance_number.upper(),
+                "system_subject_type": system_subject_type,
+                "system_customer_pesel": system_customer_pesel,
+                "system_customer_name": system_customer_name,
+                "system_vehicle_number": system_vehicle_number,
                 "validate_counter": 0
             }
+            logging.critical("Setting slots:")
+            logging.critical(slots)
         else:
             if validate_counter > validate_limit:
                 slots = {
@@ -290,6 +319,12 @@ class ValidateClaimReportForm(FormValidationAction):
     def validate_given_vehicle_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
+        if slot_value == '-':
+            slots = {
+                "given_vehicle_number": slot_value,
+                "validate_counter": 0
+            }
+            return slots
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
@@ -421,7 +456,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
         match =re.match("^9\d{11}$", given_insurance_number)
         logging.critical(f"Got insurance number: {given_insurance_number} with matching result: {match}")
         if match and given_insurance_number in baza_polisy_dict:
-            logging.critical(f"Incident {given_insurance_number} found in database.")
+            logging.critical(f"Insurance {given_insurance_number} found in database.")
             next_installment_number = None
             next_installment_amount = None
             next_installment_date = None
@@ -612,7 +647,7 @@ class ActionInitClaimReport(Action):
         events = []
         given_subject_type = tracker.get_slot("given_subject_type")
         if given_subject_type != "MOTOR":
-            events.append(SlotSet("vehicle_number", "-"))
+            events.append(SlotSet("given_vehicle_number", "-"))
         return events
 
 class ActionSetIncidentStatusPath(Action):
@@ -694,34 +729,35 @@ class ActionSelectUtterIncidentStatus(Action):
         if incident_status_path == "bot_info_inspection":
             incident_inspection_date = tracker.get_slot("incident_inspection_date")
             if incident_inspection_date:
-                dispatcher.utter_template("utter_incident_status_inspection", tracker)
+                dispatcher.utter_message(template="utter_incident_status_inspection")
             else:
-                dispatcher.utter_template("utter_incident_status_no_inspection", tracker)
+                dispatcher.utter_message(template="utter_incident_status_no_inspection")
         elif incident_status_path == "bot_info_withdrawal":
             incident_withdrawal_amount = tracker.get_slot("incident_withdrawal_amount")
             if incident_withdrawal_amount:
-                dispatcher.utter_template("utter_incident_status_withdrawal", tracker)
+                dispatcher.utter_message(template="utter_incident_status_withdrawal")
             else:
-                dispatcher.utter_template("utter_incident_status_no_withdrawal", tracker)
+                dispatcher.utter_message(template="utter_incident_status_no_withdrawal")
         elif incident_status_path == "bot_info_documents":
             incident_documents_submission_date = tracker.get_slot("incident_documents_submission_date")
             incident_missing_documents_list = tracker.get_slot("incident_missing_documents_list")
             if incident_documents_submission_date:
                 if incident_missing_documents_list:
-                    dispatcher.utter_template("utter_incident_status_date_list", tracker)
+                    dispatcher.utter_message(template="utter_incident_status_date_list")
                 else:
-                    dispatcher.utter_template("utter_incident_status_date_no_list", tracker)
+                    dispatcher.utter_message(template="utter_incident_status_date_no_list")
             else:
                 if incident_missing_documents_list:
-                    dispatcher.utter_template("utter_incident_status_no_date_list", tracker)
+                    dispatcher.utter_message(template="utter_incident_status_no_date_list")
                 else:
-                    dispatcher.utter_template("utter_incident_status_no_date_no_list", tracker)
+                    dispatcher.utter_message(template="utter_incident_status_no_date_no_list")
         elif incident_status_path == "consultant_direct":
-            dispatcher.utter_template("utter_incident_status_transfer", tracker)
+            dispatcher.utter_message(template="utter_incident_status_transfer")
         elif incident_status_path == "manager_message":
-            dispatcher.utter_template("utter_incident_status_message", tracker)
+            dispatcher.utter_message(template="utter_incident_status_message")
         else:
-            dispatcher.utter_template("utter_error", tracker)
+            dispatcher.utter_message(template="utter_error")
+        events.append(FollowupAction('action_listen'))
         return events
 
 class ActionSelectUtterCustomerQuestion(Action):

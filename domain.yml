@@ -27,6 +27,7 @@ intents:
 entities:
   - time
   - given_subject_type
+  - given_insurance_type
 
 slots:
   customer_authenticated:
@@ -157,6 +158,7 @@ actions:
   - action_session_start
   - action_asr_low_confidence
   - action_nlu_low_confidence
+  - action_need_assistance_question
   - action_set_given_subject_type
   - action_init_claim_report
   - action_set_incident_status_path
@@ -191,7 +193,7 @@ forms:
         - type: from_text
       given_insurance_type:
         - type: from_entity
-          entity: insurance_type
+          entity: given_insurance_type
       given_vehicle_number:
         - type: from_text
 
