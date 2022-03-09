@@ -27,6 +27,7 @@ intents:
 entities:
   - time
   - given_subject_type
+  - given_insurance_number
   - given_insurance_type
 
 slots:

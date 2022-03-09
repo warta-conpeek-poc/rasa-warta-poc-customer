@@ -254,10 +254,11 @@ nlu:
   examples: |
     - chciałem się dowiedzieć czy mam ważne ubezpieczenie OC
     - czy  moja polisa jest ważna
-    - czy polisa o nr…. Jest aktywna
-    - do kiedy obowiązuje polisa
+    - czy polisa o numerze [9 2 0 0 1 7 8 0 4 0 2 2](given_insurance_number) jest aktywna
+    - do kiedy obowiązuje polisa numer [9 2 0 0 1 7 8 0 4 0 2 2](given_insurance_number)
     - czy polisa jest jeszcze ważna
     - kiedy kończy mi się moja polisa
+    - kiedy kończy mi się polisa o numerze [9 2 0 0 1 7 8 0 4 0 2 2](given_insurance_number)
     - mam polisę od poprzedniego właściciela, czy ona jest obowiązująca
     - chcę się dowiedzieć do kiedy mam polisę
     - może mi Pani sprawdzić czy polisa jest aktywa
