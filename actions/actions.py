@@ -775,17 +775,18 @@ class ActionSelectUtterCustomerQuestion(Action):
             insurance_payment_1_done = tracker.get_slot("insurance_payment_1_done")
             insurance_payment_2_done = tracker.get_slot("insurance_payment_2_done")
             if insurance_payment_1_done and insurance_payment_2_done:
-                events.append(FollowupAction("utter_customer_question_payment_done"))
+                dispatcher.utter_message(template="utter_customer_question_payment_done")
             else:
-                events.append(FollowupAction("utter_customer_question_payment_waiting"))
+                dispatcher.utter_message(template="utter_customer_question_payment_waiting")
         elif customer_question_path == "bot_info_validity":
             insurance_active = tracker.get_slot("insurance_active")
             if insurance_active:
-                events.append(FollowupAction("utter_customer_question__insurance_active"))
+                dispatcher.utter_message(template="utter_customer_question__insurance_active")
             else:
-                events.append(FollowupAction("utter_customer_question__insurance_inactive"))
+                dispatcher.utter_message(template="utter_customer_question__insurance_inactive")
         else:
-            events.append(FollowupAction("utter_error"))
+            dispatcher.utter_message(template="utter_error")
+        events.append(FollowupAction('action_listen'))
         return events
 
 class ActionPerformCustomerAuthentication(Action):
