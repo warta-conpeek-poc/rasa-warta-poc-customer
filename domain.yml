@@ -447,6 +447,7 @@ responses:
       custom:
         blocks:
           - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount}. Dziękuję za rozmowę.'
+            ssml: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount}. Dziękuję za rozmowę.'
         end_of_conversation:
     - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę.'
 
@@ -455,9 +456,9 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-          - text: 'Szkoda nie zostałą oszacowana. Dziękuję za rozmowę.'
+          - text: 'Szkoda nie została oszacowana. Dziękuję za rozmowę.'
         end_of_conversation:
-    - text: 'Szkoda nie zostałą oszacowana. Dziękuję za rozmowę.'
+    - text: 'Szkoda nie została oszacowana. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
   utter_incident_status_date_list:

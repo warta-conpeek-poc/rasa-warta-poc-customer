@@ -370,6 +370,9 @@ class ValidateIncidentNumberForm(FormValidationAction):
                 word = "-"
             given_incident_number += word.upper()
         given_incident_number = given_incident_number.replace("-", "")
+        given_incident_number = given_incident_number.translate({8211: None})
+        logging.critical(f"Numer zgłoszenia wprowadzony: {slot_value}")
+        logging.critical(f"Numer zgłoszenia po modyfikacji: {given_incident_number}")
         match1 =re.match("^[WH]\d{12}$", given_incident_number, re.IGNORECASE)
         match2 =re.match("^[WH]\d{14}$", given_incident_number, re.IGNORECASE)
         match = False
