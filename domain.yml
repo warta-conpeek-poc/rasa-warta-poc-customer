@@ -446,8 +446,8 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-          - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount}. Dziękuję za rozmowę.'
-            ssml: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount}. Dziękuję za rozmowę.'
+          - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę.'
+            ssml: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę.'
         end_of_conversation:
     - text: 'Szkoda zostałą oszacowana na kwotę {incident_withdrawal_amount} złotych. Dziękuję za rozmowę.'
 
