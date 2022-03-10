@@ -4,9 +4,10 @@ language: pl
 
 pipeline:
   - name: SpacyNLP
-    model: pl_core_news_sm
+    model: pl_core_news_lg
   - name: SpacyTokenizer
   - name: SpacyFeaturizer
+#  - name: WhitespaceTokenizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
@@ -27,7 +28,7 @@ pipeline:
   - name: FallbackClassifier
     threshold: 0.6
 policies:
-  - name: MemoizationPolicy
+  - name: AugmentedMemoizationPolicy
     constrain_similarities: True
     max_history: 6
   - name: TEDPolicy

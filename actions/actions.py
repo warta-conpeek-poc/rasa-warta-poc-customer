@@ -679,7 +679,8 @@ class ActionSetGivenSubjectType(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
         subject = tracker.get_slot("subject")
-        events.append(SlotSet("given_subject_type", subject))
+        if subject in ["MOTOR", "PROPERTY", "PERSONAL"]:
+            events.append(SlotSet("given_subject_type", subject))
         return events
 
 class ActionInitClaimReport(Action):
