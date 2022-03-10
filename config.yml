@@ -3,7 +3,10 @@ recipe: default.v1
 language: pl
 
 pipeline:
-  - name: WhitespaceTokenizer
+  - name: SpacyNLP
+    model: pl_core_news_sm
+  - name: SpacyTokenizer
+  - name: SpacyFeaturizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
@@ -24,7 +27,7 @@ pipeline:
   - name: FallbackClassifier
     threshold: 0.6
 policies:
-  - name: AugmentedMemoizationPolicy
+  - name: MemoizationPolicy
     constrain_similarities: True
     max_history: 6
   - name: TEDPolicy

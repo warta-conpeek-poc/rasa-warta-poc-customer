@@ -132,10 +132,6 @@ stories:
       - given_subject_type: null
     - action: utter_describe_incident
     - intent: claim_report
-    - action: action_init_claim_report
-    - action: claim_report_form
-    - active_loop: claim_report_form
-    - active_loop: null
     - action: utter_claim_transfer
 
 - story: claim report without incident subject p2
@@ -153,10 +149,6 @@ stories:
     - intent: claim_report
       entities:
       - time: any
-    - action: action_init_claim_report
-    - action: claim_report_form
-    - active_loop: claim_report_form
-    - active_loop: null
     - action: utter_claim_transfer
 
 - story: claim report with initial incident subject
