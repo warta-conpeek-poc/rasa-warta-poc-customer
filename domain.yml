@@ -26,7 +26,7 @@ intents:
 
 entities:
   - time
-  - given_subject_type
+  - subject
   - given_insurance_number
   - given_insurance_type
 
@@ -56,6 +56,9 @@ slots:
     type: any
     influence_conversation: false
   given_insurance_type:
+    type: any
+    influence_conversation: false
+  subject:
     type: any
     influence_conversation: false
   given_subject_type:
@@ -187,14 +190,8 @@ forms:
 
   claim_report_form:
     required_slots:
-      given_incident_time:
-        - type: from_entity
-          entity: time
       given_insurance_number:
         - type: from_text
-      given_insurance_type:
-        - type: from_entity
-          entity: given_insurance_type
       given_vehicle_number:
         - type: from_text
 
@@ -210,9 +207,6 @@ forms:
 
   customer_authentication_form:
     required_slots:
-      given_subject_type:
-        - type: from_entity
-          entity: given_subject_type
       given_customer_name:
         - type: from_text
       given_customer_pesel:
@@ -405,7 +399,7 @@ responses:
     - text: 'Do zapłaty jest {next_installment_number} rata w wysokości {next_installment_amount} złotych. Termin płatności to {next_installment_date}. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_customer_question__insurance_active:
+  utter_customer_question_insurance_active:
     - channel: conpeek-voice
       custom:
         blocks:
@@ -415,7 +409,7 @@ responses:
     - text: 'Twoja polisa jest aktywna do dnia {insurance_end_date}. Dziękuję za rozmowę.'
 
   # UTTER -----------------------------------------------------------------------------
-  utter_customer_question__insurance_inactive:
+  utter_customer_question_insurance_inactive:
     - channel: conpeek-voice
       custom:
         blocks:

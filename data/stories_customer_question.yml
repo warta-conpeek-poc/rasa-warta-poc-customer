@@ -51,11 +51,11 @@ stories:
       - intent: customer_question_payments
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form
@@ -71,10 +71,10 @@ stories:
     - or:
       - intent: customer_question_payments
         entities:
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form
@@ -141,11 +141,11 @@ stories:
       - intent: customer_question_payments
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form
@@ -169,10 +169,10 @@ stories:
     - or:
       - intent: customer_question_payments
         entities:
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form
@@ -249,11 +249,11 @@ stories:
       - intent: customer_question_payments
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
           - given_insurance_number: any
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form
@@ -278,10 +278,10 @@ stories:
     - or:
       - intent: customer_question_payments
         entities:
-          - given_subject_type: any
+          - subject: any
       - intent: customer_question_validity
         entities:
-          - given_subject_type: any
+          - subject: any
     - action: action_set_customer_question_path
     - action: insurance_number_form
     - active_loop: insurance_number_form

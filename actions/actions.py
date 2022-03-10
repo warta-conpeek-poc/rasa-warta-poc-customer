@@ -1,6 +1,6 @@
 import json
 import random
-from typing import Any, Text, Dict, List
+from typing import Any, Text, Dict, List, Optional
 #
 from rasa_sdk import Action, Tracker
 from rasa_sdk.events import AllSlotsReset
@@ -52,7 +52,7 @@ class ActionSessionStart(Action):
             caller_contact_address = metadata["caller_contact_address"]
             match = re.match("^\d+$", caller_contact_address)
             if match:
-                events.append(SlotSet("customer_phone_number", caller_contact_address))
+                events.append(SlotSet("customer_phone_number", caller_contact_address[2:]))
         if metadata and "callee_contact_address" in metadata:
             events.append(SlotSet("service_phone_number", metadata["callee_contact_address"]))
         events.append(SlotSet("validate_counter", 0))
@@ -135,10 +135,10 @@ class ActionNeedAssistanceQuestion(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         logging.critical('Started action_need_assistance_question')
-        given_subject_type = tracker.get_slot("given_subject_type")
-        if given_subject_type == 'MOTOR':
+        entity_subject = tracker.get_slot("subject")
+        if entity_subject == 'MOTOR':
             logging.critical('dispatcher.utter_message(response=utter_give_assistance)')
-            dispatcher.utter_message(template='utter_give_assistance')
+            dispatcher.utter_message(response='utter_give_assistance')
             return [FollowupAction('action_listen')]
         else:
             return [FollowupAction('customer_info_form')]
@@ -232,22 +232,60 @@ class ValidateClaimReportForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_claim_report_form"
 
+    async def required_slots(self, slots_mapped_in_domain: List[Text], dispatcher: "CollectingDispatcher", tracker: "Tracker", domain: "DomainDict",) -> Optional[List[Text]]:
+        required_slots = ["given_incident_time"] + slots_mapped_in_domain + ["given_insurance_type"]
+        return required_slots
+
     async def extract_given_incident_time(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
-        logging.critical("Y"*10)
+        logging.critical("extract_given_incident_time "*3)
         given_incident_time = tracker.get_slot("given_incident_time")
+        duckling_time = tracker.get_slot("time")
         if given_incident_time:
             logging.critical(f"Slot given_incident_time exists with value {given_incident_time}")
+            return {"given_incident_time": given_incident_time}
+        elif duckling_time:
+            logging.critical(f"Slot time exists with value {duckling_time}")
+            return {"given_incident_time": duckling_time}
+        return {"given_incident_time": None}
+
+    async def extract_given_insurance_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
+        logging.critical("extract_given_insurance_type "*3)
+        given_insurance_type = tracker.get_slot("given_insurance_type")
+        entity_insurance_type = tracker.get_slot("insurance_type")
+        if given_insurance_type:
+            logging.critical(f"Slot given_insurance_type exists with value {given_insurance_type}")
+            return {"given_insurance_type": given_insurance_type}
+        elif entity_insurance_type:
+            logging.critical(f"Slot insurance_type exists with value {entity_insurance_type}")
+            return {"given_insurance_type": entity_insurance_type}
+        return {"given_insurance_type": None}
+
+    async def validate_given_incident_time(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical("validate_given_incident_time "*3)
+        validate_limit = 2
+        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter += 1
+        logging.critical(slot_value)
+        if slot_value:
+            given_incident_time = slot_value.split("T")[0]
+            slots = {
+                "given_incident_time": given_incident_time,
+                "validate_counter": 0
+            }
         else:
-            for entity in tracker.latest_message['entities']:
-                entity_name = entity["entity"]
-                if entity_name == "time":
-                    entity_value = entity["value"]
-                    logging.critical(f"Found entity {entity_name} with value {entity_value}")
-                    given_incident_time = entity_value
-                    return {"given_incident_time": given_incident_time}
+            if validate_counter > validate_limit:
+                slots = {
+                    "given_incident_time": "-",
+                    "validate_counter": 0
+                }
+            else:
+                slots = {
+                    "given_incident_time": None,
+                    "validate_counter": validate_counter
+                }
+        return slots
 
-
-    def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    async def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
@@ -291,32 +329,33 @@ class ValidateClaimReportForm(FormValidationAction):
                 }
         return slots
 
-    def validate_given_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    async def validate_given_insurance_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical("validate_given_insurance_type "*3)
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
         validate_counter = tracker.get_slot("validate_counter")
         validate_counter += 1
-        given_subject_type = slot_value
-        if given_subject_type in ["internal", "external"]:
+        given_insurance_type = slot_value
+        if given_insurance_type in ["internal", "external"]:
             slots = {
-                "given_subject_type": given_subject_type,
+                "given_insurance_type": given_insurance_type,
                 "validate_counter": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
-                    "given_subject_type": slot_value,
+                    "given_insurance_type": slot_value,
                     "validate_counter": 0
                 }
             else:
                 slots = {
-                    "given_subject_type": None,
+                    "given_insurance_type": None,
                     "validate_counter": validate_counter
                 }
         return slots
 
-    def validate_given_vehicle_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+    async def validate_given_vehicle_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
         if slot_value == '-':
@@ -529,19 +568,21 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_customer_authentication_form"
 
+    async def required_slots(self, slots_mapped_in_domain: List[Text], dispatcher: "CollectingDispatcher", tracker: "Tracker", domain: "DomainDict",) -> Optional[List[Text]]:
+        required_slots = ["given_subject_type"] + slots_mapped_in_domain
+        return required_slots
+
     async def extract_given_subject_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
-        logging.critical("Y"*10)
+        logging.critical("extract_given_subject_type "*3)
         given_subject_type = tracker.get_slot("given_subject_type")
+        entity_subject = tracker.get_slot("subject")
         if given_subject_type:
             logging.critical(f"Slot given_subject_type exists with value {given_subject_type}")
-        else:
-            for entity in tracker.latest_message['entities']:
-                entity_name = entity["entity"]
-                if entity_name == "given_subject_type":
-                    entity_value = entity["value"]
-                    logging.critical(f"Found entity {entity_name} with value {entity_value}")
-                    given_subject_type = entity_value
-                    return {"given_subject_type": given_subject_type}
+            return {"given_subject_type": given_subject_type}
+        elif entity_subject:
+            logging.critical(f"Slot subject exists with value {entity_subject}")
+            return {"given_subject_type": entity_subject}
+        return {"given_subject_type": None}
 
     def validate_given_subject_type(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         logging.critical("X"*10)
@@ -637,8 +678,8 @@ class ActionSetGivenSubjectType(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        given_subject_type = tracker.get_slot("given_subject_type")
-        events.append(SlotSet("given_subject_type", given_subject_type))
+        subject = tracker.get_slot("subject")
+        events.append(SlotSet("given_subject_type", subject))
         return events
 
 class ActionInitClaimReport(Action):
@@ -648,8 +689,8 @@ class ActionInitClaimReport(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         events = []
-        given_subject_type = tracker.get_slot("given_subject_type")
-        if given_subject_type != "MOTOR":
+        subject_type = tracker.get_slot("subject")
+        if subject_type != "MOTOR":
             events.append(SlotSet("given_vehicle_number", "-"))
         return events
 
@@ -732,34 +773,34 @@ class ActionSelectUtterIncidentStatus(Action):
         if incident_status_path == "bot_info_inspection":
             incident_inspection_date = tracker.get_slot("incident_inspection_date")
             if incident_inspection_date:
-                dispatcher.utter_message(template="utter_incident_status_inspection")
+                dispatcher.utter_message(response="utter_incident_status_inspection")
             else:
-                dispatcher.utter_message(template="utter_incident_status_no_inspection")
+                dispatcher.utter_message(response="utter_incident_status_no_inspection")
         elif incident_status_path == "bot_info_withdrawal":
             incident_withdrawal_amount = tracker.get_slot("incident_withdrawal_amount")
             if incident_withdrawal_amount:
-                dispatcher.utter_message(template="utter_incident_status_withdrawal")
+                dispatcher.utter_message(response="utter_incident_status_withdrawal")
             else:
-                dispatcher.utter_message(template="utter_incident_status_no_withdrawal")
+                dispatcher.utter_message(response="utter_incident_status_no_withdrawal")
         elif incident_status_path == "bot_info_documents":
             incident_documents_submission_date = tracker.get_slot("incident_documents_submission_date")
             incident_missing_documents_list = tracker.get_slot("incident_missing_documents_list")
             if incident_documents_submission_date:
                 if incident_missing_documents_list:
-                    dispatcher.utter_message(template="utter_incident_status_date_list")
+                    dispatcher.utter_message(response="utter_incident_status_date_list")
                 else:
-                    dispatcher.utter_message(template="utter_incident_status_date_no_list")
+                    dispatcher.utter_message(response="utter_incident_status_date_no_list")
             else:
                 if incident_missing_documents_list:
-                    dispatcher.utter_message(template="utter_incident_status_no_date_list")
+                    dispatcher.utter_message(response="utter_incident_status_no_date_list")
                 else:
-                    dispatcher.utter_message(template="utter_incident_status_no_date_no_list")
+                    dispatcher.utter_message(response="utter_incident_status_no_date_no_list")
         elif incident_status_path == "consultant_direct":
-            dispatcher.utter_message(template="utter_incident_status_transfer")
+            dispatcher.utter_message(response="utter_incident_status_transfer")
         elif incident_status_path == "manager_message":
-            dispatcher.utter_message(template="utter_incident_status_message")
+            dispatcher.utter_message(response="utter_incident_status_message")
         else:
-            dispatcher.utter_message(template="utter_error")
+            dispatcher.utter_message(response="utter_error")
         events.append(FollowupAction('action_listen'))
         return events
 
@@ -775,17 +816,17 @@ class ActionSelectUtterCustomerQuestion(Action):
             insurance_payment_1_done = tracker.get_slot("insurance_payment_1_done")
             insurance_payment_2_done = tracker.get_slot("insurance_payment_2_done")
             if insurance_payment_1_done and insurance_payment_2_done:
-                dispatcher.utter_message(template="utter_customer_question_payment_done")
+                dispatcher.utter_message(response="utter_customer_question_payment_done")
             else:
-                dispatcher.utter_message(template="utter_customer_question_payment_waiting")
+                dispatcher.utter_message(response="utter_customer_question_payment_waiting")
         elif customer_question_path == "bot_info_validity":
             insurance_active = tracker.get_slot("insurance_active")
             if insurance_active:
-                dispatcher.utter_message(template="utter_customer_question__insurance_active")
+                dispatcher.utter_message(response="utter_customer_question_insurance_active")
             else:
-                dispatcher.utter_message(template="utter_customer_question__insurance_inactive")
+                dispatcher.utter_message(response="utter_customer_question_insurance_inactive")
         else:
-            dispatcher.utter_message(template="utter_error")
+            dispatcher.utter_message(response="utter_error")
         events.append(FollowupAction('action_listen'))
         return events
 

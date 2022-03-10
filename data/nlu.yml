@@ -65,12 +65,12 @@ nlu:
     - dotyczy polisy [mojej]{"entity": "given_insurance_type", "value": "internal"}
     - [sprawcy]{"entity": "given_insurance_type", "value": "external"}
     - dotyczy polisy [sprawcy]{"entity": "given_insurance_type", "value": "external"}
-    - [nieruchomości]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - [pojazdu]{"entity": "given_subject_type", "value": "MOTOR"}
-    - [pojazdów]{"entity": "given_subject_type", "value": "MOTOR"}
-    - dotyczy [samochodu]{"entity": "given_subject_type", "value": "MOTOR"}
-    - dotyczy [auta]{"entity": "given_subject_type", "value": "MOTOR"}
-    - [osoby]{"entity": "given_subject_type", "value": "PERSONAL"}
+    - [nieruchomości]{"entity": "subject", "value": "PROPERTY"}
+    - [pojazdu]{"entity": "subject", "value": "MOTOR"}
+    - [pojazdów]{"entity": "subject", "value": "MOTOR"}
+    - dotyczy [samochodu]{"entity": "subject", "value": "MOTOR"}
+    - dotyczy [auta]{"entity": "subject", "value": "MOTOR"}
+    - [osoby]{"entity": "subject", "value": "PERSONAL"}
 
 - intent: assistance_request
   examples: |
@@ -91,67 +91,67 @@ nlu:
     - miałem wypadek
     - miałem wypadek, chciałem to zgłosić
     - sprawca kolizji ma ubezpieczenie w Warcie
-    - ktoś się włamał do mojego [mieszkania]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - w [pokoju]{"entity": "given_subject_type", "value": "PROPERTY"} pojawiły się zacieki
-    - pojawiły się zacieki na [suficie]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - pojawiły się zacieki na [ścianach]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - pękł wężyk w [łazience]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - zalało [podłogę]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - brama elektryczna w [garażu]{"entity": "given_subject_type", "value": "PROPERTY"} przestała działać
-    - [dach]{"entity": "given_subject_type", "value": "PROPERTY"} został uszkodzony
-    - po silnej burzy, zerwało [dachówki]{"entity": "given_subject_type", "value": "PROPERTY"} został uszkodzony
-    - w wyniku gradobicia została uszkodzona [elewacja]{"entity": "given_subject_type", "value": "PROPERTY"} na moim [budynku]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - piłka wybiła [okno]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - silny wiatr zerwał papę ze [stodoły]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - szkoda powstała w [mieszkaniu]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - sąsiad zalał mi [pokój]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - wybuchł pożar w [domu]{"entity": "given_subject_type", "value": "PROPERTY"} z powodu awarii elektryki
-    - z powodu przepięcia nie działa [lodówka]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - z powodu przepięcia nie działa [pralka]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - z powodu przepięcia nie działa [zmywarka]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - z powodu przepięcia nie działa [piekarnik]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - z powodu przepięcia nie działa [mikrofala]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - w [domu]{"entity": "given_subject_type", "value": "PROPERTY"} wybuchł pożar, wszystko się spaliło
-    - mam u Was polisę chciałem zgłosić szkode w [mieszkaniu]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - po powrocie do [domu]{"entity": "given_subject_type", "value": "PROPERTY"} zauważyłam zacienki na suficie w [łazience]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - zauważyłam zacienki na [suficie]{"entity": "given_subject_type", "value": "PROPERTY"} w [łazience]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - mam zalaną [łazienkę]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - po silnych opadach deszczu w [pokoju]{"entity": "given_subject_type", "value": "PROPERTY"} pojawiło się zalanie przy oknie dachowym
-    - ktoś popisał, zniszczył [elewację]{"entity": "given_subject_type", "value": "PROPERTY"} na moim domu
-    - po burzy woda z ulicy wpłynęła do mojego [garażu]{"entity": "given_subject_type", "value": "PROPERTY"}
-    - [kuchnia]{"entity": "given_subject_type", "value": "PROPERTY"} została zalana z powodu pęknięcia wężyka z wodą
-    - na [ścianie]{"entity": "given_subject_type", "value": "PROPERTY"} w [pokoju]{"entity": "given_subject_type", "value": "PROPERTY"} pojawiła się mokra plama
-    - mam u Was polisę, ktoś uszkodził mi [auto]{"entity": "given_subject_type", "value": "MOTOR"} na parkingu
-    - w nocy skradziono mi [samochód]{"entity": "given_subject_type", "value": "MOTOR"}
-    - na autostradzie kamień uderzył mi w [szybę]{"entity": "given_subject_type", "value": "MOTOR"}, jest pęknięta
-    - wpadłem w dziurę i uszkodziłem [zawieszenie]{"entity": "given_subject_type", "value": "MOTOR"}
-    - sprawca cofał [na parkingu]{"entity": "given_subject_type", "value": "MOTOR"} i uderzył w mój tylny [zderzak]{"entity": "given_subject_type", "value": "MOTOR"}
-    - zmieniałem pas ruchu i nie zauważyłem [pojazdu]{"entity": "given_subject_type", "value": "MOTOR"} z lewej strony, doszło do [zderzenia]{"entity": "given_subject_type", "value": "MOTOR"}
-    - stałem na światłach, sprawca nie wyhamował i uderzył w mój [samochód]{"entity": "given_subject_type", "value": "MOTOR"}
-    - wróciłem ze sklepu i zobaczyłem, że mam urwane [lusterko]{"entity": "given_subject_type", "value": "MOTOR"}
-    - wyjeżdzając z garażu obtarłem prawy tylny [błotnik]{"entity": "given_subject_type", "value": "MOTOR"}
-    - ubezpieczony u Was uszkodził mi [samochód]{"entity": "given_subject_type", "value": "MOTOR"}
-    - nie wiem jak doszło do zdarzenia, mam uszkodzone prawe przednie [drzwi]{"entity": "given_subject_type", "value": "MOTOR"}
-    - z ulicy z prawej strony wyjechał [samochód]{"entity": "given_subject_type", "value": "MOTOR"}, nie zdąrzyłem [wyhamować]{"entity": "given_subject_type", "value": "MOTOR"}
-    - na [skrzyżowaniu]{"entity": "given_subject_type", "value": "MOTOR"} doszło do [kolizji]{"entity": "given_subject_type", "value": "MOTOR"}
-    - chciałem zgłosić [szkodę z OC]{"entity": "given_subject_type", "value": "MOTOR"}
-    - chciałem zgłosić [szkodę z Autocasco]{"entity": "given_subject_type", "value": "MOTOR"}
-    - w związku z [kolizją]{"entity": "given_subject_type", "value": "MOTOR"} mam uszkodzony [pojazd]{"entity": "given_subject_type", "value": "MOTOR"}
-    - mój [kierowca]{"entity": "given_subject_type", "value": "MOTOR"} zderzył się z innym [samochodem]{"entity": "given_subject_type", "value": "MOTOR"}, chciałem zgłosić
-    - uszkodziłem [samochód]{"entity": "given_subject_type", "value": "MOTOR"} wyjeżdzając z miejsca parkigowego
-    - mam uszkodzony [samochód]{"entity": "given_subject_type", "value": "MOTOR"}, nie wiem jak doszło do zdarzenia
-    - myjąc [samochód]{"entity": "given_subject_type", "value": "MOTOR"} zauważyłem uszkodzenie na tylnym [zderzaku]{"entity": "given_subject_type", "value": "MOTOR"}
-    - jechałem drogą, nagle wyskoczył [dzik]{"entity": "given_subject_type", "value": "MOTOR"}, doszło do [zderzenia]{"entity": "given_subject_type", "value": "MOTOR"}
-    - szedłem chodnikiem, [potknąłem się]{"entity": "given_subject_type", "value": "PERSONAL"} i skręciłem [nogę]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - miałem wypadek na [nartach]{"entity": "given_subject_type", "value": "PERSONAL"}, złamałem [nogę]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - moja córka na lekcji wf skręciła [kostkę]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - miałem wypadek samochodowy, doszło do uszkodzenia [kręgosłupa]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - schodziłem ze schodów i spadając uszkodziłem [nadgarstek]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - pracując na gospodarstwie doszło do wypadku, rozciąłem [palec]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - mam złamaną [nogę]{"entity": "given_subject_type", "value": "PERSONAL"}, upadłem wysiadając z autobusu
-    - syn w szkole skręcił [kostkę]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - będąc na stoku ktoś na mnie wpadł, bolą mnie [plecy]{"entity": "given_subject_type", "value": "PERSONAL"}, jestem w trakcie [leczenia]{"entity": "given_subject_type", "value": "PERSONAL"}
-    - chciałem zgłosić [szkodę osobową]{"entity": "given_subject_type", "value": "PERSONAL"}
+    - ktoś się włamał do mojego [mieszkania]{"entity": "subject", "value": "PROPERTY"}
+    - w [pokoju]{"entity": "subject", "value": "PROPERTY"} pojawiły się zacieki
+    - pojawiły się zacieki na [suficie]{"entity": "subject", "value": "PROPERTY"}
+    - pojawiły się zacieki na [ścianach]{"entity": "subject", "value": "PROPERTY"}
+    - pękł wężyk w [łazience]{"entity": "subject", "value": "PROPERTY"}
+    - zalało [podłogę]{"entity": "subject", "value": "PROPERTY"}
+    - brama elektryczna w [garażu]{"entity": "subject", "value": "PROPERTY"} przestała działać
+    - [dach]{"entity": "subject", "value": "PROPERTY"} został uszkodzony
+    - po silnej burzy, zerwało [dachówki]{"entity": "subject", "value": "PROPERTY"} został uszkodzony
+    - w wyniku gradobicia została uszkodzona [elewacja]{"entity": "subject", "value": "PROPERTY"} na moim [budynku]{"entity": "subject", "value": "PROPERTY"}
+    - piłka wybiła [okno]{"entity": "subject", "value": "PROPERTY"}
+    - silny wiatr zerwał papę ze [stodoły]{"entity": "subject", "value": "PROPERTY"}
+    - szkoda powstała w [mieszkaniu]{"entity": "subject", "value": "PROPERTY"}
+    - sąsiad zalał mi [pokój]{"entity": "subject", "value": "PROPERTY"}
+    - wybuchł pożar w [domu]{"entity": "subject", "value": "PROPERTY"} z powodu awarii elektryki
+    - z powodu przepięcia nie działa [lodówka]{"entity": "subject", "value": "PROPERTY"}
+    - z powodu przepięcia nie działa [pralka]{"entity": "subject", "value": "PROPERTY"}
+    - z powodu przepięcia nie działa [zmywarka]{"entity": "subject", "value": "PROPERTY"}
+    - z powodu przepięcia nie działa [piekarnik]{"entity": "subject", "value": "PROPERTY"}
+    - z powodu przepięcia nie działa [mikrofala]{"entity": "subject", "value": "PROPERTY"}
+    - w [domu]{"entity": "subject", "value": "PROPERTY"} wybuchł pożar, wszystko się spaliło
+    - mam u Was polisę chciałem zgłosić szkode w [mieszkaniu]{"entity": "subject", "value": "PROPERTY"}
+    - po powrocie do [domu]{"entity": "subject", "value": "PROPERTY"} zauważyłam zacienki na suficie w [łazience]{"entity": "subject", "value": "PROPERTY"}
+    - zauważyłam zacienki na [suficie]{"entity": "subject", "value": "PROPERTY"} w [łazience]{"entity": "subject", "value": "PROPERTY"}
+    - mam zalaną [łazienkę]{"entity": "subject", "value": "PROPERTY"}
+    - po silnych opadach deszczu w [pokoju]{"entity": "subject", "value": "PROPERTY"} pojawiło się zalanie przy oknie dachowym
+    - ktoś popisał, zniszczył [elewację]{"entity": "subject", "value": "PROPERTY"} na moim domu
+    - po burzy woda z ulicy wpłynęła do mojego [garażu]{"entity": "subject", "value": "PROPERTY"}
+    - [kuchnia]{"entity": "subject", "value": "PROPERTY"} została zalana z powodu pęknięcia wężyka z wodą
+    - na [ścianie]{"entity": "subject", "value": "PROPERTY"} w [pokoju]{"entity": "subject", "value": "PROPERTY"} pojawiła się mokra plama
+    - mam u Was polisę, ktoś uszkodził mi [auto]{"entity": "subject", "value": "MOTOR"} na parkingu
+    - w nocy skradziono mi [samochód]{"entity": "subject", "value": "MOTOR"}
+    - na autostradzie kamień uderzył mi w [szybę]{"entity": "subject", "value": "MOTOR"}, jest pęknięta
+    - wpadłem w dziurę i uszkodziłem [zawieszenie]{"entity": "subject", "value": "MOTOR"}
+    - sprawca cofał [na parkingu]{"entity": "subject", "value": "MOTOR"} i uderzył w mój tylny [zderzak]{"entity": "subject", "value": "MOTOR"}
+    - zmieniałem pas ruchu i nie zauważyłem [pojazdu]{"entity": "subject", "value": "MOTOR"} z lewej strony, doszło do [zderzenia]{"entity": "subject", "value": "MOTOR"}
+    - stałem na światłach, sprawca nie wyhamował i uderzył w mój [samochód]{"entity": "subject", "value": "MOTOR"}
+    - wróciłem ze sklepu i zobaczyłem, że mam urwane [lusterko]{"entity": "subject", "value": "MOTOR"}
+    - wyjeżdzając z garażu obtarłem prawy tylny [błotnik]{"entity": "subject", "value": "MOTOR"}
+    - ubezpieczony u Was uszkodził mi [samochód]{"entity": "subject", "value": "MOTOR"}
+    - nie wiem jak doszło do zdarzenia, mam uszkodzone prawe przednie [drzwi]{"entity": "subject", "value": "MOTOR"}
+    - z ulicy z prawej strony wyjechał [samochód]{"entity": "subject", "value": "MOTOR"}, nie zdąrzyłem [wyhamować]{"entity": "subject", "value": "MOTOR"}
+    - na [skrzyżowaniu]{"entity": "subject", "value": "MOTOR"} doszło do [kolizji]{"entity": "subject", "value": "MOTOR"}
+    - chciałem zgłosić [szkodę z OC]{"entity": "subject", "value": "MOTOR"}
+    - chciałem zgłosić [szkodę z Autocasco]{"entity": "subject", "value": "MOTOR"}
+    - w związku z [kolizją]{"entity": "subject", "value": "MOTOR"} mam uszkodzony [pojazd]{"entity": "subject", "value": "MOTOR"}
+    - mój [kierowca]{"entity": "subject", "value": "MOTOR"} zderzył się z innym [samochodem]{"entity": "subject", "value": "MOTOR"}, chciałem zgłosić
+    - uszkodziłem [samochód]{"entity": "subject", "value": "MOTOR"} wyjeżdzając z miejsca parkigowego
+    - mam uszkodzony [samochód]{"entity": "subject", "value": "MOTOR"}, nie wiem jak doszło do zdarzenia
+    - myjąc [samochód]{"entity": "subject", "value": "MOTOR"} zauważyłem uszkodzenie na tylnym [zderzaku]{"entity": "subject", "value": "MOTOR"}
+    - jechałem drogą, nagle wyskoczył [dzik]{"entity": "subject", "value": "MOTOR"}, doszło do [zderzenia]{"entity": "subject", "value": "MOTOR"}
+    - szedłem chodnikiem, [potknąłem się]{"entity": "subject", "value": "PERSONAL"} i skręciłem [nogę]{"entity": "subject", "value": "PERSONAL"}
+    - miałem wypadek na [nartach]{"entity": "subject", "value": "PERSONAL"}, złamałem [nogę]{"entity": "subject", "value": "PERSONAL"}
+    - moja córka na lekcji wf skręciła [kostkę]{"entity": "subject", "value": "PERSONAL"}
+    - miałem wypadek samochodowy, doszło do uszkodzenia [kręgosłupa]{"entity": "subject", "value": "PERSONAL"}
+    - schodziłem ze schodów i spadając uszkodziłem [nadgarstek]{"entity": "subject", "value": "PERSONAL"}
+    - pracując na gospodarstwie doszło do wypadku, rozciąłem [palec]{"entity": "subject", "value": "PERSONAL"}
+    - mam złamaną [nogę]{"entity": "subject", "value": "PERSONAL"}, upadłem wysiadając z autobusu
+    - syn w szkole skręcił [kostkę]{"entity": "subject", "value": "PERSONAL"}
+    - będąc na stoku ktoś na mnie wpadł, bolą mnie [plecy]{"entity": "subject", "value": "PERSONAL"}, jestem w trakcie [leczenia]{"entity": "subject", "value": "PERSONAL"}
+    - chciałem zgłosić [szkodę osobową]{"entity": "subject", "value": "PERSONAL"}
 
 - intent: incident_status
   examples: |
@@ -240,7 +240,7 @@ nlu:
 - intent: customer_question_payments
   examples: |
     - mam polisę u Was, czy ona jest opłacona
-    - mam u was polisę [OC]{"entity": "given_subject_type", "value": "MOTOR"}, czy ona jest opłacona
+    - mam u was polisę [OC]{"entity": "subject", "value": "MOTOR"}, czy ona jest opłacona
     - do kiedy muszę zapłacić polisę
     - chciałem sprawdzić czy moja polisa na skuter jest opłacona
     - może pani sprawdzić czy jest opłacona składka

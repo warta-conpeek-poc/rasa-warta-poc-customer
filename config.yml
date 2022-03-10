@@ -22,7 +22,7 @@ pipeline:
     timezone: "Europe/Warsaw"
     timeout : 3
   - name: FallbackClassifier
-    threshold: 0.7
+    threshold: 0.6
 policies:
   - name: AugmentedMemoizationPolicy
     constrain_similarities: True

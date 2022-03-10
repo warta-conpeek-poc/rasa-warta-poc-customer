@@ -26,9 +26,7 @@ stories:
     - action: utter_greet
     - intent: claim_report
       entities:
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - checkpoint: customer_info
 
@@ -38,9 +36,7 @@ stories:
     - action: utter_greet
     - intent: claim_report
       entities:
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - intent: affirm
     - action: utter_assistance_transfer
@@ -51,9 +47,7 @@ stories:
     - action: utter_greet
     - intent: claim_report
       entities:
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - intent: deny
     - checkpoint: customer_info
@@ -87,9 +81,7 @@ stories:
     - intent: claim_report
       entities:
         - time: any
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - checkpoint: customer_info
 
@@ -100,9 +92,7 @@ stories:
     - intent: claim_report
       entities:
         - time: any
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - intent: affirm
     - action: utter_assistance_transfer
@@ -114,9 +104,7 @@ stories:
     - intent: claim_report
       entities:
         - time: any
-        - given_subject_type: any
-    - slot_was_set:
-        - given_subject_type: any
+        - subject: any
     - action: action_need_assistance_question
     - intent: deny
     - checkpoint: customer_info
@@ -144,6 +132,10 @@ stories:
       - given_subject_type: null
     - action: utter_describe_incident
     - intent: claim_report
+    - action: action_init_claim_report
+    - action: claim_report_form
+    - active_loop: claim_report_form
+    - active_loop: null
     - action: utter_claim_transfer
 
 - story: claim report without incident subject p2
@@ -161,6 +153,10 @@ stories:
     - intent: claim_report
       entities:
       - time: any
+    - action: action_init_claim_report
+    - action: claim_report_form
+    - active_loop: claim_report_form
+    - active_loop: null
     - action: utter_claim_transfer
 
 - story: claim report with initial incident subject
@@ -194,7 +190,8 @@ stories:
     - action: utter_describe_incident
     - intent: claim_report
       entities:
-      - given_subject_type: any
+      - subject: any
+    - action: action_set_given_subject_type
     - slot_was_set:
       - given_subject_type: any
     - action: action_init_claim_report
@@ -218,7 +215,8 @@ stories:
     - intent: claim_report
       entities:
       - time: any
-      - given_subject_type: any
+      - subject: any
+    - action: action_set_given_subject_type
     - slot_was_set:
       - given_subject_type: any
     - action: action_init_claim_report
