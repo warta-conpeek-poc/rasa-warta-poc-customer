@@ -3,11 +3,11 @@ recipe: default.v1
 language: pl
 
 pipeline:
-  - name: SpacyNLP
-    model: pl_core_news_lg
-  - name: SpacyTokenizer
-  - name: SpacyFeaturizer
-#  - name: WhitespaceTokenizer
+#  - name: SpacyNLP
+#    model: pl_core_news_lg
+#  - name: SpacyTokenizer
+#  - name: SpacyFeaturizer
+  - name: WhitespaceTokenizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
