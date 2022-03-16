@@ -227,7 +227,7 @@ forms:
 
   incident_number_form:
     required_slots:
-      validate_counter_given_incident_number:
+      given_incident_number:
         - type: from_text
 
   insurance_number_form:
