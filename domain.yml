@@ -22,8 +22,10 @@ intents:
   - incident_status_bot_info_documents
   - incident_status_bot_info_withdrawal
   - customer_question_general
-  - customer_question_payments
-  - customer_question_validity
+  - customer_question_payments:
+      use_entities: []
+  - customer_question_validity:
+      use_entities: []
 
 entities:
   - time
