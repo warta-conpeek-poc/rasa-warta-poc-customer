@@ -226,6 +226,9 @@ forms:
         - type: from_text
 
   incident_number_form:
+    required_slots:
+      validate_counter_given_incident_number:
+        - type: from_text
 
   insurance_number_form:
     required_slots:
@@ -561,6 +564,10 @@ responses:
         blocks:
           - text: 'Czy potrzebujesz assistance?'
             sentence_end_silence_time: 500
+            speech_contexts:
+              - phrases:
+                - 'tak'
+                - 'nie'
     - text: 'Czy potrzebujesz assistance?'
 
   # UTTER -----------------------------------------------------------------------------
@@ -614,6 +621,10 @@ responses:
         blocks:
           - text: 'Zgłoszenie dotyczy polisy własnej, czy sprawcy?'
             sentence_end_silence_time: 1000
+            speech_contexts:
+              - phrases:
+                - 'własnej'
+                - 'sprawcy'
     - text: 'Zgłoszenie dotyczy polisy własnej, czy sprawcy?'
   # UTTER -----------------------------------------------------------------------------
   utter_ask_claim_report_form_given_vehicle_number:
@@ -624,7 +635,7 @@ responses:
             sentence_end_silence_time: 2000
             speech_contexts:
               - phrases:
-                  - '$OOV_CLASS_DIGIT_SEQUENCE'
+                  - '$OOV_CLASS_ALPHANUMERIC_SEQUENCE'
     - text: 'Proszę o podanie numeru rejestracyjnego auta.'
 
   # ---------------------- FORM CUSTOMER INFO ------------------------------------------

@@ -421,6 +421,10 @@ class ValidateIncidentNumberForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_incident_number_form"
 
+    async def required_slots(self, slots_mapped_in_domain: List[Text], dispatcher: "CollectingDispatcher", tracker: "Tracker", domain: "DomainDict",) -> Optional[List[Text]]:
+        required_slots = ["given_incident_number"]
+        return required_slots
+
     def validate_given_incident_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         if not slot_value:
             slot_value = "empty"
