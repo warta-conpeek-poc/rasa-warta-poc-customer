@@ -13,7 +13,8 @@ intents:
   - affirm
   - deny
   - assistance_request
-  - claim_report
+  - claim_report:
+      use_entities: []
   - incident_status
   - incident_status_consultant_direct
   - incident_status_manager_message
@@ -27,8 +28,8 @@ intents:
 entities:
   - time
   - subject
+  - insurance_type
   - given_insurance_number
-  - given_insurance_type
 
 slots:
   customer_authenticated:
@@ -53,6 +54,9 @@ slots:
     type: any
     influence_conversation: false
   given_insurance_number:
+    type: any
+    influence_conversation: false
+  insurance_type:
     type: any
     influence_conversation: false
   given_insurance_type:
@@ -154,7 +158,31 @@ slots:
   service_phone_number:
     type: any
     influence_conversation: false
-  validate_counter:
+  validate_counter_given_customer_name:
+    type: any
+    influence_conversation: false
+  validate_counter_customer_phone_number:
+    type: any
+    influence_conversation: false
+  validate_counter_customer_phone_number_confirmed:
+    type: any
+    influence_conversation: false
+  validate_counter_given_incident_number:
+    type: any
+    influence_conversation: false
+  validate_counter_given_insurance_number:
+    type: any
+    influence_conversation: false
+  validate_counter_given_insurance_type:
+    type: any
+    influence_conversation: false
+  validate_counter_given_vehicle_number:
+    type: any
+    influence_conversation: false
+  validate_counter_given_subject_type:
+    type: any
+    influence_conversation: false
+  validate_counter_given_customer_pesel:
     type: any
     influence_conversation: false
 
@@ -196,9 +224,6 @@ forms:
         - type: from_text
 
   incident_number_form:
-    required_slots:
-      given_incident_number:
-        - type: from_text
 
   insurance_number_form:
     required_slots:
@@ -220,6 +245,13 @@ responses:
         blocks:
         - text: 'Coś poszło nie tak. To jest komunikat diagnostyczny.'
     - text: 'Coś poszło nie tak. To jest komunikat diagnostyczny.'
+
+  utter_retry:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+        - text: 'Spróbujmy jeszcze raz.'
+    - text: 'Spróbujmy jeszcze raz..'
 
   # UTTER -----------------------------------------------------------------------------
   utter_default:

@@ -55,7 +55,15 @@ class ActionSessionStart(Action):
                 events.append(SlotSet("customer_phone_number", caller_contact_address[2:]))
         if metadata and "callee_contact_address" in metadata:
             events.append(SlotSet("service_phone_number", metadata["callee_contact_address"]))
-        events.append(SlotSet("validate_counter", 0))
+        events.append(SlotSet("validate_counter_given_customer_name", 0))
+        events.append(SlotSet("validate_counter_customer_phone_number", 0))
+        events.append(SlotSet("validate_counter_customer_phone_number_confirmed", 0))
+        events.append(SlotSet("validate_counter_given_incident_number", 0))
+        events.append(SlotSet("validate_counter_given_insurance_number", 0))
+        events.append(SlotSet("validate_counter_given_insurance_type", 0))
+        events.append(SlotSet("validate_counter_given_vehicle_number", 0))
+        events.append(SlotSet("validate_counter_given_subject_type", 0))
+        events.append(SlotSet("validate_counter_given_customer_pesel", 0))
         return events
 
 class ActionAsrLowConfidence(Action):
@@ -136,7 +144,7 @@ class ActionNeedAssistanceQuestion(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         logging.critical('Started action_need_assistance_question')
         entity_subject = tracker.get_slot("subject")
-        if entity_subject == 'MOTOR':
+        if not entity_subject or entity_subject == 'MOTOR':
             logging.critical('dispatcher.utter_message(response=utter_give_assistance)')
             dispatcher.utter_message(response='utter_give_assistance')
             return [FollowupAction('action_listen')]
@@ -152,24 +160,26 @@ class ValidateCustomerInfoForm(FormValidationAction):
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_customer_name")
         validate_counter += 1
         words = slot_value.split()
         if len(words) == 2:
             slots = {
                 "given_customer_name": slot_value.title(),
-                "validate_counter": 0
+                "validate_counter_given_customer_name": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_customer_name": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_customer_name": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_customer_name": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_customer_name": validate_counter
                 }
         return slots
 
@@ -177,7 +187,7 @@ class ValidateCustomerInfoForm(FormValidationAction):
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_customer_phone_number")
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
@@ -189,42 +199,46 @@ class ValidateCustomerInfoForm(FormValidationAction):
         if match:
             slots = {
                 "customer_phone_number": customer_phone_number,
-                "validate_counter": 0
+                "validate_counter_customer_phone_number": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "customer_phone_number": slot_value,
                     "customer_phone_number_confirmed": False,
-                    "validate_counter": 0
+                    "validate_counter_customer_phone_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "customer_phone_number": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_customer_phone_number": validate_counter
                 }
         return slots
 
     def validate_customer_phone_number_confirmed(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict, ) -> Dict[Text, Any]:
         validate_limit = 0
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_customer_phone_number_confirmed")
         validate_counter += 1
         latest_intent = tracker.get_intent_of_latest_message()
         if latest_intent == "affirm":
             slots = {
                 "customer_phone_number_confirmed": True,
-                "validate_counter": 0
+                "validate_counter_customer_phone_number_confirmed": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "customer_phone_number_confirmed": False,
-                    "validate_counter": 0
+                    "validate_counter_customer_phone_number_confirmed": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "customer_phone_number_confirmed": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_customer_phone_number_confirmed": validate_counter
                 }
         return slots
 
@@ -263,33 +277,36 @@ class ValidateClaimReportForm(FormValidationAction):
     async def validate_given_incident_time(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         logging.critical("validate_given_incident_time "*3)
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_incident_number")
         validate_counter += 1
         logging.critical(slot_value)
         if slot_value:
             given_incident_time = slot_value.split("T")[0]
             slots = {
                 "given_incident_time": given_incident_time,
-                "validate_counter": 0
+                "validate_counter_given_incident_number": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_incident_time": "-",
-                    "validate_counter": 0
+                    "validate_counter_given_incident_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_incident_time": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_incident_number": validate_counter
                 }
         return slots
 
     async def validate_given_insurance_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical("validate_given_insurance_number "*3)
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_insurance_number")
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
@@ -312,7 +329,7 @@ class ValidateClaimReportForm(FormValidationAction):
                 "system_customer_pesel": system_customer_pesel,
                 "system_customer_name": system_customer_name,
                 "system_vehicle_number": system_vehicle_number,
-                "validate_counter": 0
+                "validate_counter_given_insurance_number": 0
             }
             logging.critical("Setting slots:")
             logging.critical(slots)
@@ -320,12 +337,14 @@ class ValidateClaimReportForm(FormValidationAction):
             if validate_counter > validate_limit:
                 slots = {
                     "given_insurance_number": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_insurance_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_insurance_number": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_insurance_number": validate_counter
                 }
         return slots
 
@@ -334,24 +353,26 @@ class ValidateClaimReportForm(FormValidationAction):
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_insurance_type")
         validate_counter += 1
         given_insurance_type = slot_value
         if given_insurance_type in ["internal", "external"]:
             slots = {
                 "given_insurance_type": given_insurance_type,
-                "validate_counter": 0
+                "validate_counter_given_insurance_type": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_insurance_type": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_insurance_type": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_insurance_type": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_insurance_type": validate_counter
                 }
         return slots
 
@@ -361,11 +382,11 @@ class ValidateClaimReportForm(FormValidationAction):
         if slot_value == '-':
             slots = {
                 "given_vehicle_number": slot_value,
-                "validate_counter": 0
+                "validate_counter_given_vehicle_number": 0
             }
             return slots
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_vehicle_number")
         validate_counter += 1
         words = re.split('\s', slot_value)
         words = [x for x in words if x]
@@ -376,18 +397,20 @@ class ValidateClaimReportForm(FormValidationAction):
         if match:
             slots = {
                 "given_vehicle_number": given_vehicle_number,
-                "validate_counter": 0
+                "validate_counter_given_vehicle_number": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_vehicle_number": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_vehicle_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_vehicle_number": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_vehicle_number": validate_counter
                 }
         return slots
 
@@ -399,7 +422,7 @@ class ValidateIncidentNumberForm(FormValidationAction):
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_incident_number")
         validate_counter += 1
         words = re.split('\s', slot_value)
         words = [x for x in words if x]
@@ -460,7 +483,7 @@ class ValidateIncidentNumberForm(FormValidationAction):
                 "incident_documents_submission_date": incident_documents_submission_date,
                 "incident_inspection_date": incident_inspection_date,
                 "incident_withdrawal_amount": incident_withdrawal_amount,
-                "validate_counter": 0
+                "validate_counter_given_incident_number": 0
             }
             logging.critical("Setting slots:")
             logging.critical(slots)
@@ -469,13 +492,15 @@ class ValidateIncidentNumberForm(FormValidationAction):
                 slots = {
                     "given_incident_number": slot_value,
                     "incident_number_verified": False,
-                    "validate_counter": 0
+                    "validate_counter_given_incident_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_incident_number": None,
                     "incident_number_verified": False,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_incident_number": validate_counter
                 }
         return slots
 
@@ -487,7 +512,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
         if not slot_value:
             slot_value = "empty"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_insurance_number")
         validate_counter += 1
         words = re.split('-|\s', slot_value)
         words = [x for x in words if x]
@@ -545,7 +570,7 @@ class ValidateInsuranceNumberForm(FormValidationAction):
                 "next_installment_number": next_installment_number,
                 "next_installment_amount": next_installment_amount,
                 "next_installment_date": next_installment_date,
-                "validate_counter": 0
+                "validate_counter_given_insurance_number": 0
             }
             logging.critical("Setting slots:")
             logging.critical(slots)
@@ -554,13 +579,15 @@ class ValidateInsuranceNumberForm(FormValidationAction):
                 slots = {
                     "given_insurance_number": slot_value,
                     "insurance_number_verified": False,
-                    "validate_counter": 0
+                    "validate_counter_given_insurance_number": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_insurance_number": None,
                     "insurance_number_verified": False,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_insurance_number": validate_counter
                 }
         return slots
 
@@ -590,24 +617,26 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_subject_type")
         validate_counter += 1
         given_subject_type = slot_value
         if given_subject_type in ["PERSONAL", "MOTOR", "PROPERTY"]:
             slots = {
                 "given_subject_type": given_subject_type,
-                "validate_counter": 0
+                "validate_counter_given_subject_type": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_subject_type": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_subject_type": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_subject_type": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_subject_type": validate_counter
                 }
         logging.critical(slots)
         return slots
@@ -616,25 +645,27 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_customer_name")
         validate_counter += 1
         words = slot_value.split()
         given_customer_name = slot_value.title()
         if len(words) == 2:
             slots = {
                 "given_customer_name": given_customer_name,
-                "validate_counter": 0
+                "validate_counter_given_customer_name": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_customer_name": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_customer_name": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_customer_name": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_customer_name": validate_counter
                 }
         return slots
 
@@ -642,7 +673,7 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
-        validate_counter = tracker.get_slot("validate_counter")
+        validate_counter = tracker.get_slot("validate_counter_given_customer_pesel")
         validate_counter += 1
         given_customer_pesel = ""
         words = slot_value.split()
@@ -655,18 +686,20 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         if match :
             slots = {
                 "given_customer_pesel": given_customer_pesel,
-                "validate_counter": 0
+                "validate_counter_given_customer_pesel": 0
             }
         else:
             if validate_counter > validate_limit:
                 slots = {
                     "given_customer_pesel": slot_value,
-                    "validate_counter": 0
+                    "validate_counter_given_customer_pesel": 0
                 }
             else:
+                if validate_counter > 1:
+                    dispatcher.utter_message(response="utter_retry")
                 slots = {
                     "given_customer_pesel": None,
-                    "validate_counter": validate_counter
+                    "validate_counter_given_customer_pesel": validate_counter
                 }
         logging.critical(slots)
         return slots
