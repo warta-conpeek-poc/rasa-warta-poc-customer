@@ -39,25 +39,25 @@ with open("actions/baza_polisy_utf8.csv") as f:
         baza_polisy_dict[row['Nr polisy']] = row
 
 db_male_firstname = []
-with open("actions/IMIONA_MĘSKIE.csv") as f:
+with open("actions/IMIONA_MESKIE.csv") as f:
     f_csv = csv.DictReader(f, delimiter=',')
     for row in f_csv:
         db_male_firstname.append(row['IMIĘ_PIERWSZE'])
 
 db_female_firstname = []
-with open("actions/IMIONA_ŻEŃSKIE.csv") as f:
+with open("actions/IMIONA_ZENSKIE.csv") as f:
     f_csv = csv.DictReader(f, delimiter=',')
     for row in f_csv:
         db_male_firstname.append(row['IMIĘ_PIERWSZE'])
 
 db_male_lastname = []
-with open("actions/NAZWISKA_MĘSKIE.csv") as f:
+with open("actions/NAZWISKA_MESKIE.csv") as f:
     f_csv = csv.DictReader(f, delimiter=',')
     for row in f_csv:
         db_male_firstname.append(row['Nazwisko aktualne'])
 
 db_female_lastname = []
-with open("actions/NAZWISKA_ŻEŃSKIE.csv") as f:
+with open("actions/NAZWISKA_ZENSKIE.csv") as f:
     f_csv = csv.DictReader(f, delimiter=',')
     for row in f_csv:
         db_male_firstname.append(row['Nazwisko aktualne'])
