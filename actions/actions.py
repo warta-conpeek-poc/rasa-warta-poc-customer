@@ -38,6 +38,31 @@ with open("actions/baza_polisy_utf8.csv") as f:
     for row in f_csv:
         baza_polisy_dict[row['Nr polisy']] = row
 
+db_male_firstname = []
+with open("actions/IMIONA_MĘSKIE.csv") as f:
+    f_csv = csv.DictReader(f, delimiter=',')
+    for row in f_csv:
+        db_male_firstname.append(row['IMIĘ_PIERWSZE'])
+
+db_female_firstname = []
+with open("actions/IMIONA_ŻEŃSKIE.csv") as f:
+    f_csv = csv.DictReader(f, delimiter=',')
+    for row in f_csv:
+        db_male_firstname.append(row['IMIĘ_PIERWSZE'])
+
+db_male_lastname = []
+with open("actions/NAZWISKA_MĘSKIE.csv") as f:
+    f_csv = csv.DictReader(f, delimiter=',')
+    for row in f_csv:
+        db_male_firstname.append(row['Nazwisko aktualne'])
+
+db_female_lastname = []
+with open("actions/NAZWISKA_ŻEŃSKIE.csv") as f:
+    f_csv = csv.DictReader(f, delimiter=',')
+    for row in f_csv:
+        db_male_firstname.append(row['Nazwisko aktualne'])
+
+
 class ActionSessionStart(Action):
 
     def name(self) -> Text:
@@ -164,7 +189,9 @@ class ValidateCustomerInfoForm(FormValidationAction):
         validate_counter += 1
         logging.critical(f"validate_counter_given_customer_name: {validate_counter}")
         words = slot_value.split()
-        if len(words) == 2:
+        if (len(words) == 2) \
+            and ((words[0].upper() in db_male_firstname) or (words[0].upper() in db_female_firstname) or (words[0].upper() in db_male_lastname) or (words[0].upper() in db_female_lastname)) \
+            and ((words[1].upper() in db_male_firstname) or (words[1].upper() in db_female_firstname) or (words[1].upper() in db_male_lastname) or (words[1].upper() in db_female_lastname)):
             slots = {
                 "given_customer_name": slot_value.title(),
                 "validate_counter_given_customer_name": 0
@@ -249,7 +276,7 @@ class ValidateClaimReportForm(FormValidationAction):
         return required_slots
 
     async def extract_given_incident_time(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
-        logging.critical("extract_given_incident_time "*3)
+        logging.critical("extract_given_incident_time")
         given_incident_time = tracker.get_slot("given_incident_time")
         duckling_time = tracker.get_slot("time")
         if given_incident_time:
@@ -261,7 +288,7 @@ class ValidateClaimReportForm(FormValidationAction):
         return {"given_incident_time": None}
 
     async def extract_given_insurance_type(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict) -> Dict[Text, Any]:
-        logging.critical("extract_given_insurance_type "*3)
+        logging.critical("extract_given_insurance_type")
         given_insurance_type = tracker.get_slot("given_insurance_type")
         entity_insurance_type = tracker.get_slot("insurance_type")
         if given_insurance_type:
@@ -420,10 +447,6 @@ class ValidateClaimReportForm(FormValidationAction):
 class ValidateIncidentNumberForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_incident_number_form"
-
-    # async def required_slots(self, slots_mapped_in_domain: List[Text], dispatcher: "CollectingDispatcher", tracker: "Tracker", domain: "DomainDict",) -> Optional[List[Text]]:
-    #     required_slots = ["given_incident_number"] + slots_mapped_in_domain
-    #     return required_slots
 
     def validate_given_incident_number(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
         logging.critical("validate_given_incident_number ")
@@ -649,6 +672,7 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         return slots
 
     def validate_given_customer_name(self, slot_value: Any, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict,) -> Dict[Text, Any]:
+        logging.critical("validate_given_customer_name")
         if not slot_value:
             slot_value = "-"
         validate_limit = 2
@@ -656,7 +680,9 @@ class ValidateCustomerAuthenticationForm(FormValidationAction):
         validate_counter += 1
         words = slot_value.split()
         given_customer_name = slot_value.title()
-        if len(words) == 2:
+        if (len(words) == 2) \
+            and ((words[0].upper() in db_male_firstname) or (words[0].upper() in db_female_firstname) or (words[0].upper() in db_male_lastname) or (words[0].upper() in db_female_lastname)) \
+            and ((words[1].upper() in db_male_firstname) or (words[1].upper() in db_female_firstname) or (words[1].upper() in db_male_lastname) or (words[1].upper() in db_female_lastname)):
             slots = {
                 "given_customer_name": given_customer_name,
                 "validate_counter_given_customer_name": 0
