@@ -280,9 +280,6 @@ responses:
           - text: 'W czym mogę pomóc?'
             sentence_time_max: 20000
             sentence_end_silence_time: 1800
-          - text: 'Jak mogę Ci dzisiaj pomóc?'
-            sentence_time_max: 20000
-            sentence_end_silence_time: 1800
     - text: 'W czym mogę pomóc?'
 
   # UTTER -----------------------------------------------------------------------------
