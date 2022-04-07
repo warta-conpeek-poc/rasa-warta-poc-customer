@@ -1,29 +1,23 @@
 version: "2.0"
-
 nlu:
-
 - intent: connected
   examples: |
     - __PEER_CONNECTED__
     - __peer_connected__
-
 - intent: disconnected
   examples: |
     - __PEER_DISCONNECTED__
     - __peer_disconnected__
-
 - intent: asr_low_confidence
   examples: |
     - __LOW_CONFIDENCE__
     - __low_confidence__
-
 - intent: out_of_scope
   examples: |
     - jaki dziś mamy dzień?
     - jak masz na imię?
     - ile masz lat?
     - jaka jest pogoda?
-
 - intent: affirm
   examples: |
     - tak
@@ -34,7 +28,10 @@ nlu:
     - poproszę
     - zgoda
     - zgadzam się
-
+    - ja mam
+    - No mam
+    - Tak to prawda
+    - Tak Zgadza się
 - intent: deny
   examples: |
     - nie
@@ -42,7 +39,16 @@ nlu:
     - nie ma mowy
     - nie zgadzam się
     - w żadnym wypadku
-
+    - nie mam Nie posiadam
+    - nie mam
+    - nie mamnemam
+    - nie posiadam
+    - nie pamiętam
+    - nie mam nie mam
+    - Oj nie mam nie mam
+    - nie mam co to mówię że nie mam
+    - nie nie
+    - nie nie nie
 - intent: inform
   examples: |
     - Nikodem Kowalczyk
@@ -71,7 +77,39 @@ nlu:
     - dotyczy [samochodu]{"entity": "subject", "value": "MOTOR"}
     - dotyczy [auta]{"entity": "subject", "value": "MOTOR"}
     - [osoby]{"entity": "subject", "value": "PERSONAL"}
-
+    - ESO 1066 te
+    - 920016123258
+    - dzisiaj 10 minut temu
+    - Maciej Kulczyk
+    - so 10 66c
+    - 920123456789
+    - dzisiaj
+    - so 1060 6 C
+    - so 1066 tak
+    - w 202112 13100501
+    - w 2021 12221019 kreska 01
+    - Wanda 20 21 12 2700 15 – 01
+    - Wanda 2021 12 270 06 01
+    - LTM 07 32
+    - numer polisy to będzie [91200 1587 611](given_insurance_number)
+    - 912001587844
+    - WL 32 18
+    - 912001578427
+    - zwl28144
+    - 912001582279
+    - lwl 28144
+    - 920016024476
+    - 23 marca
+    - Elu 385 12
+    - 920016276341
+    - 9200 627 6341
+    - Maciej dybała
+    - W202 2012 710 2402
+    - 32032148603
+    - Natalka Miłkowska
+    - 93102436525
+    - W202 11 21600 3401
+    - 57052251670
 - intent: assistance_request
   examples: |
     - potrzebuję holowania
@@ -81,7 +119,6 @@ nlu:
     - auto nie zapala
     - w samochodzie zapaliła się kontrolka, potrzebuję pomocy
     - mam uszkodzone koło w aucie
-
 - intent: claim_report
   examples: |
     - chciałbym zgłosić szkodę
@@ -152,12 +189,18 @@ nlu:
     - syn w szkole skręcił [kostkę]{"entity": "subject", "value": "PERSONAL"}
     - będąc na stoku ktoś na mnie wpadł, bolą mnie [plecy]{"entity": "subject", "value": "PERSONAL"}, jestem w trakcie [leczenia]{"entity": "subject", "value": "PERSONAL"}
     - chciałem zgłosić [szkodę osobową]{"entity": "subject", "value": "PERSONAL"}
-
+    - mam uszkodzony [samochód]{"entity": "subject", "value": "MOTOR"}
+    - Chciałbym zgłosić szkoda
+    - Chciałbym zgłosić szkodę
+    - mam uszkodzony [samochód](insurance_type) a w nim uszkodzona jest szyba szyba przednia którą uderzył kamień
+    - został uszkodzony Mój [samochód]{"entity": "subject", "value": "MOTOR"} ma pękniętą przednią [szybę]{"entity": "subject", "value": "MOTOR"}
+    - mój [samochód]{"entity": "subject", "value": "MOTOR"} został uszkodzony
+    - a chciałbym zgłosić szkoda
+    - Kamień uderzył w [szybę]{"entity": "subject", "value": "MOTOR"} w samochodzie i jest pęknięta
 - intent: incident_status
   examples: |
     - jaki jest status szkody
     - co się dzieje ze zgłoszeniem
-
 - intent: incident_status_consultant_direct
   examples: |
     - potrzębuję pojazdu zastępczego
@@ -180,7 +223,14 @@ nlu:
     - potrzebuję przedłużyc pojazd zastępczy
     - auto jest w warsztacie jeszcze, auto potrzebuję
     - dajcie mi jakiś warsztat do naprawy
-
+    - Pojazd zastępczy
+    - samochód zastępczy
+    - samochód dostawczy
+    - a samochód zastępczy
+    - No ja bym się chciał dowiedzieć w sprawie pojazdu zastępczego bo miałem wypadek Potrzebuję wynająć
+    - A ja muszę chciał dowiedzieć jak tutaj dokumenty do was można dosłać
+    - a chciałbym się dowiedzieć jak załączyć dokumenty
+    - a chciałbym porozmawiać na temat pojazdu zastępczego
 - intent: incident_status_manager_message
   examples: |
     - chciałbym porozmawiać z opiekunem szkody
@@ -202,13 +252,13 @@ nlu:
     - kiedy zakończy się szkoda
     - rozmawiać o kosztorysie
     - nie zgadzam się z wyceną
-
+    - chciałbym się dopytać o to kiedy będzie wypłata odszkodowania
+    - a chciałbym porozmawiać Dlatego na mojej szkody
 - intent: incident_status_bot_info_inspection
   examples: |
     - czy przyjedzie rzeczoznawca
     - zgłosiłem szkodę, czekam na oględziny, kiedy się ktoś odedzwie
     - kiedy będą oględziny
-
 - intent: incident_status_bot_info_documents
   examples: |
     - czy dotarły dokumenty
@@ -217,13 +267,11 @@ nlu:
     - dokumenty z mojej strony które były potrzebne są wysłane
     - chciałbym zapytać czy zdjęcia doszły
     - chciałabym porozmawiać jakie dokumenty jeszcze dostarczyć
-
 - intent: incident_status_bot_info_withdrawal
   examples: |
     - jaka jest kwota wypłaty
     - jak oszacowana jest szkoda
     - ile jest na kosztorysie
-
 - intent: customer_question_general
   examples: |
     - przyszło mi ubezpieczenie na przyczepkę, ja ją sprzedałem czy z Panią to załatwię
@@ -236,7 +284,7 @@ nlu:
     - potrzebuję zaświadczenie o przebiegu ubezpieczenia, czy otrzymam coś takiego na mail
     - kupiłam samochód, wczoraj skończyła się polisa, co mam zrobić, czy mogę ją wypowiedzieć, czy jest kontynuowana
     - mam u Państwa samochód, pojazd tylko, że już go sprzedałam, ale polisę mam do marca, mówię o AC, ale chciałam to Państwu zgłosić
-
+    - Kupiłam samochód i ubezpieczenie przeszło na mnie Ja go przerejestrowałem czy ja muszę teraz aneks do tej umowy jakieś zawrzeć żeby to przeszło na mnie
 - intent: customer_question_payments
   examples: |
     - mam polisę u Was, czy ona jest opłacona
@@ -249,7 +297,7 @@ nlu:
     - chyba nie zapłaciłem raty za samochód
     - chciałem się dowiedzieć o wpłacie na polisie
     - ubiega termin płatności raty
-
+    - mam polisę u was Chciałbym sprawdzić czy jest opłacona
 - intent: customer_question_validity
   examples: |
     - chciałem się dowiedzieć czy mam ważne ubezpieczenie OC
@@ -263,7 +311,79 @@ nlu:
     - chcę się dowiedzieć do kiedy mam polisę
     - może mi Pani sprawdzić czy polisa jest aktywa
     - czy ta polisa jest ważna
-
-
-
-
+- synonym: internal
+  examples: |
+    - własnej
+    - mojej
+- synonym: external
+  examples: |
+    - sprawcy
+- synonym: PROPERTY
+  examples: |
+    - nieruchomości
+    - mieszkania
+    - pokoju
+    - suficie
+    - ścianach
+    - łazience
+    - podłogę
+    - garażu
+    - dach
+    - dachówki
+    - elewacja
+    - budynku
+    - okno
+    - stodoły
+    - mieszkaniu
+    - pokój
+    - domu
+    - lodówka
+    - pralka
+    - zmywarka
+    - piekarnik
+    - mikrofala
+    - łazienkę
+    - elewację
+    - kuchnia
+    - ścianie
+- synonym: MOTOR
+  examples: |
+    - pojazdu
+    - pojazdów
+    - samochodu
+    - auta
+    - auto
+    - samochód
+    - szybę
+    - zawieszenie
+    - na parkingu
+    - zderzak
+    - zderzenia
+    - lusterko
+    - błotnik
+    - drzwi
+    - wyhamować
+    - skrzyżowaniu
+    - kolizji
+    - szkodę z OC
+    - szkodę z Autocasco
+    - kolizją
+    - pojazd
+    - kierowca
+    - samochodem
+    - zderzaku
+    - dzik
+    - OC
+- synonym: PERSONAL
+  examples: |
+    - osoby
+    - potknąłem się
+    - nogę
+    - nartach
+    - kostkę
+    - kręgosłupa
+    - nadgarstek
+    - palec
+    - plecy
+    - leczenia
+    - szkodę osobową
