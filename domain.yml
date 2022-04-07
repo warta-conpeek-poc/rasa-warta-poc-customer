@@ -277,7 +277,7 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-          - text: 'W czym mogę pomóc?'
+          - text: 'W czym mogę Ci dzisiaj pomóc?'
             sentence_time_max: 20000
             sentence_end_silence_time: 1800
     - text: 'W czym mogę pomóc?'
