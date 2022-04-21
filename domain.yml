@@ -737,3 +737,12 @@ responses:
                  remove_whitespace: True
     - text: 'Podaj proszę numer pesel.'
 
+# UTTER -----------------------------------------------------------------------------
+  utter_assistance_travel:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: 'Rozpoznałem intencję assistance travel'
+            sentence_time_max: 20000
+            sentence_end_silence_time: 1800
+    - text: 'Rozpoznałem intencję assistance travel'

@@ -264,6 +264,14 @@ nlu:
     - może mi Pani sprawdzić czy polisa jest aktywa
     - czy ta polisa jest ważna
 
-
-
+- intent: customer_question_travel
+  examples: |
+    - jestem za granicą i potrzebuję umówić się do lekarza
+    - jestem w szpitalu, co mam robić?
+    - zachorowałem na wakacjach, potrzebuję pomocy
+    - złamałem nogę na nartach
+    - zginął mi bagaż na lotnisku
+    - jak tutaj umówić się do lekarza
+    - jestem na wakacjach, szukam najbliższego szpitala
+    
 
