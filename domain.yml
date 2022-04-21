@@ -26,6 +26,7 @@ intents:
       use_entities: []
   - customer_question_validity:
       use_entities: []
+  - customer_question_travel
 
 entities:
   - time
