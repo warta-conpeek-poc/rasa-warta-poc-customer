@@ -273,5 +273,13 @@ nlu:
     - zginął mi bagaż na lotnisku
     - jak tutaj umówić się do lekarza
     - jestem na wakacjach, szukam najbliższego szpitala
+
+- intent: confirm_travel
+  examples: |
+    - tak
+    - potrzebuję pomocy
+    - oczywiście
+    - zgadza się
+    - bardzo proszę
     
 

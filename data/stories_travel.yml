@@ -8,4 +8,6 @@ stories:
       - action: utter_greet
       - intent: customer_question_travel
       - action: utter_assistance_travel
+      - intent: confirm_travel
+      - action: utter_redirect_travel
 

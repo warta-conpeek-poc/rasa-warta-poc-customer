@@ -743,7 +743,16 @@ responses:
     - channel: conpeek-voice
       custom:
         blocks:
-          - text: 'Rozpoznałem intencję assistance travel'
+          - text: 'Rozumiem, że jesteś w podróży i potrzebujesz pomocy. Czy mam Cię połączyć z konsultantem?'
             sentence_time_max: 20000
             sentence_end_silence_time: 1800
-    - text: 'Rozpoznałem intencję assistance travel'
+    - text: 'Rozumiem, że jesteś w podróży i potrzebujesz pomocy. Czy mam Cię połączyć z konsultantem?'
+# UTTER -----------------------------------------------------------------------------
+  utter_redirect_travel:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: 'Za chwilę połączę Cię z konsultantem'
+            sentence_time_max: 20000
+            sentence_end_silence_time: 1800
+    - text: 'Za chwilę połączę Cię z konsultantem'
