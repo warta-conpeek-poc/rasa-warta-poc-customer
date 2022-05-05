@@ -1,29 +1,24 @@
 version: "2.0"
-
 nlu:
-
 - intent: connected
   examples: |
     - __PEER_CONNECTED__
     - __peer_connected__
-
+    - peer_connect
 - intent: disconnected
   examples: |
     - __PEER_DISCONNECTED__
     - __peer_disconnected__
-
 - intent: asr_low_confidence
   examples: |
     - __LOW_CONFIDENCE__
     - __low_confidence__
-
 - intent: out_of_scope
   examples: |
     - jaki dziś mamy dzień?
     - jak masz na imię?
     - ile masz lat?
     - jaka jest pogoda?
-
 - intent: affirm
   examples: |
     - tak
@@ -34,7 +29,6 @@ nlu:
     - poproszę
     - zgoda
     - zgadzam się
-
 - intent: deny
   examples: |
     - nie
@@ -42,7 +36,6 @@ nlu:
     - nie ma mowy
     - nie zgadzam się
     - w żadnym wypadku
-
 - intent: inform
   examples: |
     - Nikodem Kowalczyk
@@ -71,7 +64,7 @@ nlu:
     - dotyczy [samochodu]{"entity": "subject", "value": "MOTOR"}
     - dotyczy [auta]{"entity": "subject", "value": "MOTOR"}
     - [osoby]{"entity": "subject", "value": "PERSONAL"}
-
+    - H202112041008
 - intent: assistance_request
   examples: |
     - potrzebuję holowania
@@ -81,7 +74,6 @@ nlu:
     - auto nie zapala
     - w samochodzie zapaliła się kontrolka, potrzebuję pomocy
     - mam uszkodzone koło w aucie
-
 - intent: claim_report
   examples: |
     - chciałbym zgłosić szkodę
@@ -152,12 +144,10 @@ nlu:
     - syn w szkole skręcił [kostkę]{"entity": "subject", "value": "PERSONAL"}
     - będąc na stoku ktoś na mnie wpadł, bolą mnie [plecy]{"entity": "subject", "value": "PERSONAL"}, jestem w trakcie [leczenia]{"entity": "subject", "value": "PERSONAL"}
     - chciałem zgłosić [szkodę osobową]{"entity": "subject", "value": "PERSONAL"}
-
 - intent: incident_status
   examples: |
     - jaki jest status szkody
     - co się dzieje ze zgłoszeniem
-
 - intent: incident_status_consultant_direct
   examples: |
     - potrzębuję pojazdu zastępczego
@@ -180,7 +170,6 @@ nlu:
     - potrzebuję przedłużyc pojazd zastępczy
     - auto jest w warsztacie jeszcze, auto potrzebuję
     - dajcie mi jakiś warsztat do naprawy
-
 - intent: incident_status_manager_message
   examples: |
     - chciałbym porozmawiać z opiekunem szkody
@@ -202,13 +191,11 @@ nlu:
     - kiedy zakończy się szkoda
     - rozmawiać o kosztorysie
     - nie zgadzam się z wyceną
-
 - intent: incident_status_bot_info_inspection
   examples: |
     - czy przyjedzie rzeczoznawca
     - zgłosiłem szkodę, czekam na oględziny, kiedy się ktoś odedzwie
     - kiedy będą oględziny
-
 - intent: incident_status_bot_info_documents
   examples: |
     - czy dotarły dokumenty
@@ -217,13 +204,11 @@ nlu:
     - dokumenty z mojej strony które były potrzebne są wysłane
     - chciałbym zapytać czy zdjęcia doszły
     - chciałabym porozmawiać jakie dokumenty jeszcze dostarczyć
-
 - intent: incident_status_bot_info_withdrawal
   examples: |
     - jaka jest kwota wypłaty
     - jak oszacowana jest szkoda
     - ile jest na kosztorysie
-
 - intent: customer_question_general
   examples: |
     - przyszło mi ubezpieczenie na przyczepkę, ja ją sprzedałem czy z Panią to załatwię
@@ -236,7 +221,6 @@ nlu:
     - potrzebuję zaświadczenie o przebiegu ubezpieczenia, czy otrzymam coś takiego na mail
     - kupiłam samochód, wczoraj skończyła się polisa, co mam zrobić, czy mogę ją wypowiedzieć, czy jest kontynuowana
     - mam u Państwa samochód, pojazd tylko, że już go sprzedałam, ale polisę mam do marca, mówię o AC, ale chciałam to Państwu zgłosić
-
 - intent: customer_question_payments
   examples: |
     - mam polisę u Was, czy ona jest opłacona
@@ -249,7 +233,6 @@ nlu:
     - chyba nie zapłaciłem raty za samochód
     - chciałem się dowiedzieć o wpłacie na polisie
     - ubiega termin płatności raty
-
 - intent: customer_question_validity
   examples: |
     - chciałem się dowiedzieć czy mam ważne ubezpieczenie OC
@@ -263,7 +246,6 @@ nlu:
     - chcę się dowiedzieć do kiedy mam polisę
     - może mi Pani sprawdzić czy polisa jest aktywa
     - czy ta polisa jest ważna
-
 - intent: customer_question_travel
   examples: |
     - jestem za granicą i potrzebuję umówić się do lekarza
@@ -273,5 +255,80 @@ nlu:
     - zginął mi bagaż na lotnisku
     - jak tutaj umówić się do lekarza
     - jestem na wakacjach, szukam najbliższego szpitala
-    
-
+    - jestem na wakacjach i potrzebuję lekarza
+- synonym: internal
+  examples: |
+    - własnej
+    - mojej
+- synonym: external
+  examples: |
+    - sprawcy
+- synonym: PROPERTY
+  examples: |
+    - nieruchomości
+    - mieszkania
+    - pokoju
+    - suficie
+    - ścianach
+    - łazience
+    - podłogę
+    - garażu
+    - dach
+    - dachówki
+    - elewacja
+    - budynku
+    - okno
+    - stodoły
+    - mieszkaniu
+    - pokój
+    - domu
+    - lodówka
+    - pralka
+    - zmywarka
+    - piekarnik
+    - mikrofala
+    - łazienkę
+    - elewację
+    - kuchnia
+    - ścianie
+- synonym: MOTOR
+  examples: |
+    - pojazdu
+    - pojazdów
+    - samochodu
+    - auta
+    - auto
+    - samochód
+    - szybę
+    - zawieszenie
+    - na parkingu
+    - zderzak
+    - zderzenia
+    - lusterko
+    - błotnik
+    - drzwi
+    - wyhamować
+    - skrzyżowaniu
+    - kolizji
+    - szkodę z OC
+    - szkodę z Autocasco
+    - kolizją
+    - pojazd
+    - kierowca
+    - samochodem
+    - zderzaku
+    - dzik
+    - OC
+- synonym: PERSONAL
+  examples: |
+    - osoby
+    - potknąłem się
+    - nogę
+    - nartach
+    - kostkę
+    - kręgosłupa
+    - nadgarstek
+    - palec
+    - plecy
+    - leczenia
+    - szkodę osobową
