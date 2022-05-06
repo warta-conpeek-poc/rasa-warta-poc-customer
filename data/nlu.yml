@@ -260,6 +260,13 @@ nlu:
     - oczywiście
     - zgadza się
     - bardzo proszę
+- intent: deny_travel
+  examples: |
+    - nie chcę
+    - nie potrzebuję
+    - nie zgadzam się
+    - nie mogę rozmawiać
+    - nie mam takiej potrzeby 
 - synonym: internal
   examples: |
     - własnej

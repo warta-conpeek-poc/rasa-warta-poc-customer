@@ -758,3 +758,12 @@ responses:
             sentence_time_max: 20000
             sentence_end_silence_time: 1800
     - text: 'Za chwilę połączę Cię z konsultantem'
+# UTTER -----------------------------------------------------------------------------
+  utter_deny_travel:
+    - channel: conpeek-voice
+      custom:
+        blocks:
+          - text: 'Nic więcej nie mogę dla Ciebie zrobić'
+            sentence_time_max: 20000
+            sentence_end_silence_time: 1800
+    - text: 'Nic więcej nie mogę dla Ciebie zrobić'

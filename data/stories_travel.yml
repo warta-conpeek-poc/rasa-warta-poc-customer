@@ -10,4 +10,6 @@ stories:
       - action: utter_assistance_travel
       - intent: confirm_travel
       - action: utter_redirect_travel
+      - intent: deny_travel
+      - action: utter_deny_travel
 
