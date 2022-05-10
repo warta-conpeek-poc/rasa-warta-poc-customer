@@ -253,6 +253,7 @@ nlu:
     - zginął mi bagaż na lotnisku
     - jak tutaj umówić się do lekarza
     - jestem na wakacjach, szukam najbliższego szpitala
+    - potrzebuję lekarza, jestem za granicą
 - intent: confirm_travel
   examples: |
     - tak
@@ -266,7 +267,7 @@ nlu:
     - nie potrzebuję
     - nie zgadzam się
     - nie mogę rozmawiać
-    - nie mam takiej potrzeby 
+    - nie mam takiej potrzeby
 - synonym: internal
   examples: |
     - własnej
